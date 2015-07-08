@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" version="EE-3.7.0" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:wd-revenue="http://www.mulesoft.org/schema/mule/wd-revenue" xmlns:weave="http://www.mulesoft.org/schema/mule/ee/weave" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
-http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-http://www.mulesoft.org/schema/mule/wd-revenue http://www.mulesoft.org/schema/mule/wd-revenue/current/mule-wd-revenue.xsd
-http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
-http://www.mulesoft.org/schema/mule/ee/weave http://www.mulesoft.org/schema/mule/ee/weave/current/weave.xsd">
+<mule version="EE-3.7.0" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:wd-revenue="http://www.mulesoft.org/schema/mule/wd-revenue" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/wd-revenue http://www.mulesoft.org/schema/mule/wd-revenue/current/mule-wd-revenue.xsd http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
     <http:listener-config doc:name="HTTP Listener Configuration" host="0.0.0.0" name="HTTP_Listener_Configuration" port="9090"/>
     
-    <wd-revenue:config doc:name="Workday Revenue Management" name="Workday_Revenue_Management" revenueEndpoint="${wday.endpoint}" revenuePassword="${wday.password}" revenueUser="${wday.user}">
+    <wd-revenue:config doc:name="Workday Revenue Management" name="Workday_Revenue_Management" revenueEndpoint="https://wd2-impl-services1.workday.com/ccx/service/mulesoft_pt1/Revenue_Management/v23.0" revenuePassword="2abrexeT2!" revenueUser="tguru@mulesoft_pt1">
         <wd-revenue:connection-pooling-profile exhaustedAction="WHEN_EXHAUSTED_GROW" initialisationPolicy="INITIALISE_ONE"/>
     </wd-revenue:config>    
     
     <flow name="add-customer-flow">
         <http:listener allowedMethods="POST" config-ref="HTTP_Listener_Configuration" doc:name="Recieve HTTP requests" path="/"/>
         <byte-array-to-string-transformer doc:name="Byte Array to String" mimeType="text/xml"/>
-        <weave:transform-message doc:name="XML to Workday PutCustomerRequestType">
-            <weave:set-payload><![CDATA[%weave 0.1
+        <dw:transform-message doc:name="XML to Workday PutCustomerRequestType">
+            <dw:set-payload><![CDATA[%dw 1.0
 %output application/java
 ---
 {
@@ -41,10 +36,11 @@ http://www.mulesoft.org/schema/mule/ee/weave http://www.mulesoft.org/schema/mule
 			businessEntityName: payload.root.Account.BusinessEntityName
 		},
 		customerName: payload.root.Account.CustomerName,
-		customerID: payload.root.Account.CustomerName
+		customerID: payload.root.Account.CustomerName,
+		customerReferenceID: payload.root.Account.CustomerName
 	}		
-} as :object { class: "com.workday.revenue.PutCustomerRequestType" }]]></weave:set-payload>
-        </weave:transform-message>
+} as :object { class: "com.workday.revenue.PutCustomerRequestType" }]]></dw:set-payload>
+        </dw:transform-message>
         <wd-revenue:put-customer config-ref="Workday_Revenue_Management" doc:name="Workday Revenue Management"/>
         <set-payload doc:name="Set Response" value="Added customer: #[payload.customerReference.descriptor]"/>
     </flow>

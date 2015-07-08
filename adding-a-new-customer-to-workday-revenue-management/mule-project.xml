@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<mule-project xmlns="http://www.mulesoft.com/tooling/project" runtimeId="org.mule.tooling.server.3.7.0.ee" schemaVersion="3.5.0.0">
+<?xml version="1.0" encoding="UTF-8"?>
+<mule-project runtimeId="org.mule.tooling.server.3.7.0.ee" schemaVersion="3.5.0.0" xmlns="http://www.mulesoft.com/tooling/project">
     <name>adding-a-new-customer-to-workday-revenue-management</name>
-    <description></description>
+    <description/>
     <muleExtension name="Workday Revenue Management" qualifier="org.mule.tooling.ui.contribution.wd-revenue"/>
 </mule-project>

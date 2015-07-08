@@ -55,10 +55,9 @@ public class AddingNewCustomerToWorkdayRevenueManagementIT extends FunctionalTes
 	private CustomerType customer;
 	
 	@BeforeClass
-	public static void init(){
+	public static void init(){		
 		Properties props = new Properties();
-		try {
-			
+		try {			
 			props.load(new FileInputStream(PATH_TO_TEST_PROPERTIES));			
 		} catch (Exception e) {
 			throw new IllegalStateException(
@@ -77,12 +76,14 @@ public class AddingNewCustomerToWorkdayRevenueManagementIT extends FunctionalTes
 	public void setUp() throws Exception {						
 		xmlInput = FileUtils.readFileToString(new File(PATH_TO_XML));
 		xmlInput = xmlInput.replace("NAME", CUSTOMER_NAME);
-		LOGGER.info("test customer: " + CUSTOMER_NAME);
+		LOGGER.info("Test customer: " + CUSTOMER_NAME);
 	}
 
 	@Test
 	public void testCreateCustomer() throws Exception{
 		runFlow(FLOW_NAME, xmlInput);
+		
+		Thread.sleep(10000);
 		
 		SubflowInterceptingChainLifecycleWrapper retrieveAccountWdayFlow = getSubFlow("retrieveAccountWdayFlow");
 		retrieveAccountWdayFlow.initialise();		
@@ -102,11 +103,11 @@ public class AddingNewCustomerToWorkdayRevenueManagementIT extends FunctionalTes
 		
 		PutCustomerRequestType put = new PutCustomerRequestType();
 		CustomerWWSDataType data = new CustomerWWSDataType();
-		LOGGER.info("deleting wday: " + customer.getCustomerData().getCustomerName());
+		LOGGER.info("Deleting wday customer: " + customer.getCustomerData().getCustomerName());
 		data.setCustomerName(customer.getCustomerData().getCustomerName());
 		BusinessEntityWWSDataType entity = new BusinessEntityWWSDataType();
 		entity.setBusinessEntityName(customer.getCustomerData().getCustomerName());
-		data.setBusinessEntityData(entity );
+		data.setBusinessEntityData(entity);
 		data.setCustomerCategoryReference(customer.getCustomerData().getCustomerCategoryReference());
 		List<CustomerStatusDataType> statusList = new ArrayList<CustomerStatusDataType>();
 		CustomerStatusDataType status = new CustomerStatusDataType();
@@ -116,8 +117,8 @@ public class AddingNewCustomerToWorkdayRevenueManagementIT extends FunctionalTes
 		BusinessEntityStatusValueObjectIDType e = new BusinessEntityStatusValueObjectIDType();
 		e.setType("WID");
 		e.setValue(STATUS_WID);
-		ids.add(e );
-		value.setID(ids );
+		ids.add(e);
+		value.setID(ids);
 		
 		ReasonForCustomerStatusChangeObjectType reason = new ReasonForCustomerStatusChangeObjectType();
 		List<ReasonForCustomerStatusChangeObjectIDType> reasonIds = new ArrayList<ReasonForCustomerStatusChangeObjectIDType>();
@@ -125,16 +126,16 @@ public class AddingNewCustomerToWorkdayRevenueManagementIT extends FunctionalTes
 		reasonId.setType("WID");
 		reasonId.setValue(REASON_WID);
 		reasonIds.add(reasonId);
-		reason.setID(reasonIds );
+		reason.setID(reasonIds);
 		
-		status.setReasonForCustomerStatusChangeReference(reason );
-		status.setCustomerStatusValueReference(value );
-		statusList.add(status );
-		data.setCustomerStatusData(statusList );
+		status.setReasonForCustomerStatusChangeReference(reason);
+		status.setCustomerStatusValueReference(value);
+		statusList.add(status);
+		data.setCustomerStatusData(statusList);
 				
 		put.setCustomerReference(customer.getCustomerReference());
-		put.setCustomerData(data );
-		return put ;
+		put.setCustomerData(data);
+		return put;
 	}
 
 	protected CustomerType invokeRetrieveWdayFlow(SubflowInterceptingChainLifecycleWrapper flow, String name) throws Exception {

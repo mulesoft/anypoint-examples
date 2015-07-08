@@ -14,7 +14,6 @@
 
 	<properties>
 		<wday.rev.version>4.1.1</wday.rev.version>
-		<weave.version>1.0.0-RC2-SNAPSHOT</weave.version>
 	</properties>
 
 	<dependencies>
@@ -44,7 +43,7 @@
 		<dependency>
             <groupId>com.mulesoft.weave</groupId>
             <artifactId>mule-plugin-weave_2.11</artifactId>
-            <version>${weave.version}</version>
+            <version>${mule.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>    

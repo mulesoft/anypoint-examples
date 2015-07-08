@@ -21,8 +21,8 @@ public class CustomerRequest {
 		List<CustomerRequestCriteriaType> requestCriteria = new ArrayList<CustomerRequestCriteriaType>();
 		CustomerRequestCriteriaType crit = new CustomerRequestCriteriaType();
 		crit.setCustomerReferenceID(id);
-		requestCriteria.add(crit );
-		get.setRequestCriteria(requestCriteria );
+		requestCriteria.add(crit);
+		get.setRequestCriteria(requestCriteria);
 		return get ;
 	}
 }

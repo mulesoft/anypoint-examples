@@ -2,7 +2,7 @@
 <mule version="EE-3.7.0" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:wd-revenue="http://www.mulesoft.org/schema/mule/wd-revenue" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/wd-revenue http://www.mulesoft.org/schema/mule/wd-revenue/current/mule-wd-revenue.xsd">
 
 	<sub-flow name="retrieveAccountWdayFlow">
-        <wd-revenue:get-customers config-ref="Workday_Revenue_Management" doc:name="query for Customer" getCustomersRequest-ref="#[org.mule.examples.CustomerRequest.getCustomer(payload)]"/>
+        <wd-revenue:get-customers config-ref="Workday_Revenue_Management" doc:name="Query for Customer" getCustomersRequest-ref="#[org.mule.examples.CustomerRequest.getCustomer(payload)]"/>
     </sub-flow>
     <sub-flow name="inactivateAccountWorkdayFlow">
         <wd-revenue:put-customer config-ref="Workday_Revenue_Management" doc:name="Workday Revenue Management"/>
