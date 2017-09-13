@@ -1,0 +1,14 @@
+#%RAML 0.8
+---
+title: Currency API
+baseUri: http://localhost:8081/api/
+
+/currencies: 
+  get: 
+    responses: 
+      200: 
+        description: Retrieve the list of currencies and their USD to conversion rate.
+        body: 
+          application/json: 
+            schema: !include currency-schema.json
+      

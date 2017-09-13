@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<file:config name="File_Config" doc:name="File Config" doc:id="23a15a10-142c-4b29-b973-e41896501660" />
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="0290942b-09fd-455e-ba21-672696ed5bb8" basePath="/api/" >
+		<http:request-connection host="0.0.0.0" port="8081" />
+	</http:request-config>
+	<flow name="booksFlow" doc:id="d87ccaa7-263d-40d2-a10b-7ef04f0c48d9" >
+		<scheduler doc:name="Scheduler" doc:id="01d446b7-0fa0-4299-9201-04a33a2278c4" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="10" timeUnit="SECONDS"/>
+			</scheduling-strategy>
+		</scheduler>
+		<file:read config-ref="File_Config" path="C:\Users\ntb\AnypointStudio\studio400\processing-orders-with-dataweave-and-apikit\src\main\resources\orders.xml" doc:name="Read From Xml File" doc:id="979cdacf-f354-4f80-a115-8837c1f95587" outputMimeType="application/xml"/>
+		<set-variable variableName="orders" value="#[payload]" doc:name="Save Input To  Variable orders" doc:id="f7b7b031-4c2c-4fbc-a8f2-f8ea5d3abbd5" mimeType="application/xml"/>
+		<http:request config-ref="HTTP_Request_configuration" method="GET" path="/currencies" doc:name="GET Currencies" doc:id="0d11e723-17ef-40dd-9a1a-e57ee1d0425f" outputMimeType="application/json">
+		</http:request>
+		<ee:transform doc:name="Process Orders and Create Report" doc:id="63ae4c85-8c62-4c36-bee9-f37110497ee4" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	orders: vars.orders.orders.*item filter ($.properties.year > 2004) map 
+		using (item = $) {
+			title: $.properties.title, 
+			prices: payload.USD map {
+				price: $.ratio * item.price,
+				currency: $.currency
+			},
+			authors: $.properties.authors distinctBy $
+		}
+}]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="report" ><![CDATA[%dw 2.0
+output application/csv
+---
+[{
+	totalNumberOfItems: sizeOf (vars.orders.orders.*item),
+	totalAmount: sum (vars.orders.orders.*item.price),
+	averageSellingPrice: avg (vars.orders.orders.*item.price)
+}]]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="056885dd-2869-4345-96d4-446ed1d26527" message="#[payload]"/>
+		<file:write config-ref="File_Config" path="C:\Users\ntb\AnypointStudio\studio400\processing-orders-with-dataweave-and-apikit\src\main\resources\output\orders.json" doc:name="Write To Json File" doc:id="8bd02eb6-8c2f-49fa-8313-daae38f1fd44" />
+		<file:write config-ref="File_Config" path="C:\Users\ntb\AnypointStudio\studio400\processing-orders-with-dataweave-and-apikit\src\main\resources\output\report.csv" doc:name="Write Report To Csv File" doc:id="601406ea-38ab-4062-a2ec-80d2da543367" >
+			<file:content ><![CDATA[#[vars.report]]]></file:content>
+		</file:write>
+	</flow>
+</mule>

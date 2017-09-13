@@ -1,0 +1,44 @@
+{
+  "orders": [
+    {
+      "title": "Everyday Italian",
+      "prices": [
+        {
+          "price": 27.60,
+          "currency": "EUR"
+        },
+        {
+          "price": 262.80,
+          "currency": "ARS"
+        },
+        {
+          "price": 19.80,
+          "currency": "GBP"
+        }
+      ],
+      "authors": {
+        "author": "Giada De Laurentiis"
+      }
+    },
+    {
+      "title": "Harry Potter",
+      "prices": [
+        {
+          "price": 27.5908,
+          "currency": "EUR"
+        },
+        {
+          "price": 262.7124,
+          "currency": "ARS"
+        },
+        {
+          "price": 19.7934,
+          "currency": "GBP"
+        }
+      ],
+      "authors": {
+        "author": "J K. Rowling"
+      }
+    }
+  ]
+}

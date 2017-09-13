@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    MuleSoft Examples
+    Copyright 2014 MuleSoft, Inc.
+
+    This product includes software developed at
+    MuleSoft, Inc. (http://www.mulesoft.com/).
+
+-->
+
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="orders" type="ordersType"/>
+  <xs:complexType name="itemType">
+    <xs:sequence>
+      <xs:element name="type">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="video"/>
+            <xs:enumeration value="book"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="price">
+        <xs:simpleType>
+          <xs:restriction base="xs:float">
+            <xs:enumeration value="30"/>
+            <xs:enumeration value="29.99"/>
+            <xs:enumeration value="49.99"/>
+            <xs:enumeration value="39.95"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element type="propertiesType" name="properties"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="propertiesType">
+    <xs:sequence>
+      <xs:element name="title">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Everyday Italian"/>
+            <xs:enumeration value="Harry Potter"/>
+            <xs:enumeration value="XQuery Kick Start"/>
+            <xs:enumeration value="Learning XML"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element type="authorsType" name="authors"/>
+      <xs:element name="year">
+        <xs:simpleType>
+          <xs:restriction base="xs:short">
+            <xs:enumeration value="2005"/>
+            <xs:enumeration value="2003"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ordersType">
+    <xs:sequence>
+      <xs:element type="itemType" name="item" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="authorsType">
+    <xs:sequence>
+      <xs:element name="author" maxOccurs="unbounded" minOccurs="0">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Giada De Laurentiis"/>
+            <xs:enumeration value="J K. Rowling"/>
+            <xs:enumeration value="James McGovern"/>
+            <xs:enumeration value="Per Bothner"/>
+            <xs:enumeration value="Kurt Cagle"/>
+            <xs:enumeration value="James Linn"/>
+            <xs:enumeration value="Vaidyanathan Nagarajan"/>
+            <xs:enumeration value="Erik T. Ray"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
