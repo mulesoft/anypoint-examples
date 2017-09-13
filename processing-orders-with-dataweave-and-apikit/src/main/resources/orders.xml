@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<orders>
+  <item>
+    <type>video</type>
+    <price>30</price>
+    <properties>
+      <title>Everyday Italian</title>
+      <authors>
+        <author>Giada De Laurentiis</author>
+      </authors>
+      <year>2005</year>
+    </properties>
+  </item>
+  <item>
+    <type>book</type>
+    <price>29.99</price>
+    <properties>
+      <title>Harry Potter</title>
+      <authors>
+        <author>J K. Rowling</author>
+      </authors>
+      <year>2005</year>
+    </properties>
+  </item>
+  <item>
+    <type>book</type>
+    <price>49.99</price>
+    <properties>
+      <title>XQuery Kick Start</title>
+      <authors>
+        <author>James McGovern</author>
+        <author>Per Bothner</author>
+        <author>Kurt Cagle</author>
+        <author>James Linn</author>
+        <author>Kurt Cagle</author>
+        <author>Vaidyanathan Nagarajan</author>
+      </authors>
+      <year>2003</year>
+    </properties>
+  </item>
+  <item>
+    <type>book</type>
+    <price>39.95</price>
+    <properties>
+      <title>Learning XML</title>
+      <authors>
+        <author>Erik T. Ray</author>
+      </authors>
+      <year>2003</year>
+    </properties>
+  </item>
+</orders>

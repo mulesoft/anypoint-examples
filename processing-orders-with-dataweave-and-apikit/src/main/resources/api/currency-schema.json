@@ -1,0 +1,24 @@
+{
+  "required" : true ,
+  "$schema" : "http://json-schema.org/draft-03/schema" ,
+  "type" : "object" ,
+  "properties" : {
+    "USD" : {
+      "type" : "array" ,
+      "required" : true ,
+      "items" : {
+      	"type" : "object",
+      	"properties" : {
+	        "currency" : {
+	          "type" : "number" ,
+	          "required" : false
+	        } ,
+	        "ratio" : {
+	          "type" : "number" ,
+	          "required" : false
+	        }
+		 }
+	   }
+    }
+  }
+}

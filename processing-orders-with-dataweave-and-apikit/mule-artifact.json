@@ -1,0 +1,22 @@
+{
+  "domain": "default",
+  "configs": [
+    "books.xml",
+    "currency.xml"
+  ],
+  "redeploymentEnabled": true,
+  "name": "order",
+  "minMuleVersion": "4.0.0-rc.darkseid",
+  "classLoaderModelLoaderDescriptor": {
+    "id": "mule",
+    "attributes": {
+      "exportedResources": [
+      	"currency.json"
+      ]
+    }
+  },
+  "bundleDescriptorLoader": {
+    "id": "mule",
+    "attributes": {}
+  }
+}

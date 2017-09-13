@@ -1,0 +1,7 @@
+{
+  "USD": [
+    {"currency": "EUR", "ratio":0.92},
+    {"currency": "ARS", "ratio":8.76},
+    {"currency": "GBP", "ratio":0.66}
+  ]
+}
