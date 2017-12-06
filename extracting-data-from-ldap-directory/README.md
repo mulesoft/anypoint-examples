@@ -14,7 +14,7 @@ This document assumes that you are familiar with Mule ESB and the [Anypoint Stud
 
 ### Example Use Case
 
-The example application connects to the LDAP directory and retrieves a list of LDAP users. This list is then split into individual rows, logged and then aggregated back to a single list. We use Flow control Components such as the Collection Splitter and the Collection Aggregator to do so.
+The example application connects to the LDAP directory and retrieves a list of LDAP users. This list is returned in response.
 
 ### Set Up and Run the Example 
 
