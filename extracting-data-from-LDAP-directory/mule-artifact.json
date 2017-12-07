@@ -3,7 +3,7 @@
     "extracting-data-from-ldap-directory.xml"
   ],
   "redeploymentEnabled": true,
-  "name": "extracting-data-from-ldap-directory",
+  "name": "extracting-data-from-LDAP-directory",
   "minMuleVersion": "4.0.0",
   "requiredProduct": "MULE_EE",
   "classLoaderModelLoaderDescriptor": {
