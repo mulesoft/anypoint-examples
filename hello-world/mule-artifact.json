@@ -1,5 +1,4 @@
 {
-  "domain": "default",
   "configs": [
     "hello-world.xml"
   ],

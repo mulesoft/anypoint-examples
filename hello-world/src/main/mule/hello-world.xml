@@ -2,16 +2,14 @@
 
 <mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:spring="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
-http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
-	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="c103feeb-d9bd-4e68-bd3a-f453610c817e" >
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="d6132ed6-b549-4a5a-ab30-b0006362476b" >
 		<http:listener-connection host="0.0.0.0" port="8081" />
 	</http:listener-config>
-	<flow name="hello-worldFlow" doc:id="2fd39eb0-d36b-450e-9609-92fcf18e65ae" >
-		<http:listener config-ref="HTTP_Listener_config" path="/helloWorld" doc:name="Listener" doc:id="9548c4f6-4596-4daa-acc1-519214eb434c" />
-		<logger level="INFO" doc:name="Logger" doc:id="16f9639e-d157-4b73-91db-3f772af78f38" message="#[attributes.requestPath]"/>
-		<set-payload value="Hello World!" doc:name="Set String as Palyload" doc:id="4eaa0127-7736-48ac-9b3c-5271360854d3" />
+	<flow name="hello-worldFlow" doc:id="fb709ee4-0263-492c-92e3-ba5bb6287cd7" >
+		<http:listener doc:name="Listener" doc:id="b4f5d981-3869-46e4-879b-2ba9e8e1c2b7" config-ref="HTTP_Listener_config" path="/helloWorld"/>
+		<logger level="INFO" doc:name="Logger" doc:id="d254b372-8ea9-4b59-bb07-04cc2bf715a5" message="#[attributes.requestPath]"/>
+		<set-payload value="Hello World!" doc:name="Set Payload" doc:id="c04ac342-40dd-48ec-bf80-206d3aaa77e3" mimeType="text/plain"/>
 	</flow>
 </mule>
