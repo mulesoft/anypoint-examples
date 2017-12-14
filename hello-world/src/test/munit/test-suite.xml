@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<munit:config name="test-suite.xml" />
+
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="6b5aa625-f970-4771-866b-20389dd54c67">
+		<http:request-connection host="localhost" port="8081" />
+	</http:request-config>
+
+	<munit:test name="hello-worldFlowTest" description="Test" doc:id="267cfccb-8f25-4a05-a916-42fe4457eb5d" >
+    	<munit:enable-flow-sources>
+	        <munit:enable-flow-source value="hello-worldFlow"/>
+    	</munit:enable-flow-sources>
+
+    	<munit:execution>
+	        <http:request method="GET" path="/helloWorld" config-ref="HTTP_Request_configuration" doc:name="Request"/>
+    	</munit:execution>
+
+    	<munit:validation>
+        	<ee:transform doc:name="Transform Response body to String" doc:id="88ff422c-a6c2-49af-9c07-891f73dafe6f" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<munit-tools:assert-that expression="#[payload]" is="#[MunitTools::equalTo('Hello World!')]" doc:name="Assert response body"/>
+			<munit-tools:assert-that doc:name="Assert response status" doc:id="e399bb68-26ef-428c-9b68-89ca73bf76b1" expression="#[attributes.statusCode]" is="#[MunitTools::equalTo(200)]"/>
+			<munit-tools:assert-that doc:name="Assert content type" doc:id="5c3d6cd1-d15a-40e2-9a03-12589ce76d9f" expression="#[attributes.headers['content-type']]" is="#[MunitTools::equalTo('text/plain')]"/>
+    	
+</munit:validation>
+	</munit:test>
+</mule>
