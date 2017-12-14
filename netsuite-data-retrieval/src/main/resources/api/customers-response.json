@@ -1,0 +1,111 @@
+[
+  {
+    "lastName": "Wolfe",
+    "isInactive": false,
+    "companyName": "Ramsey Inc. Wholesale Distribution V2011.1",
+    "receivablesAccount": {
+      "externalId": null,
+      "type": null,
+      "internalId": "-10",
+      "name": "Use System Preference"
+    },
+    "consolBalance": -32.3,
+    "isPerson": true,
+    "lastPageVisited": "Shopping Cart",
+    "consolAging2": 0,
+    "consolAging3": 0,
+    "internalId": "-5",
+    "visits": 31,
+    "billPay": false,
+    "consolAging4": -32.3,
+    "dateCreated": "2013-07-22T00:00:00-07:00",
+    "aging2": 0,
+    "consolDepositBalance": 0,
+    "aging3": 0,
+    "accessRole": {
+      "externalId": null,
+      "type": null,
+      "internalId": "14",
+      "name": "Customer Center"
+    },
+    "altEmail": "awolfe@huffmanmfg.com",
+    "consolAging1": 0,
+    "aging1": 0,
+    "unbilledOrders": 49.98,
+    "consolUnbilledOrders": 49.98,
+    "currency": {
+      "externalId": null,
+      "type": null,
+      "internalId": "1",
+      "name": "USA"
+    },
+    "aging4": -32.3,
+    "consolOverdueBalance": 0,
+    "firstVisit": "2015-01-02T08:03:20-08:00",
+    "email": "suchi.deshpande@mulesoft.com",
+    "giveAccess": true,
+    "customFieldList": {
+      "customField": [
+        {
+          "BooleanCustomFieldRef__custentity_fmt_customer_credit_on_hold": "false",
+          "SelectCustomFieldRef__custentity8": {
+            "internalId": "3",
+            "name": "Less than $5 million",
+            "externalId": null,
+            "typeId": "16"
+          },
+          "LongCustomFieldRef__custentity_cust_priority": "50",
+          "SelectCustomFieldRef__custentity7": {
+            "internalId": "1",
+            "name": "1 - 99 Employees",
+            "externalId": null,
+            "typeId": "17"
+          },
+          "SelectCustomFieldRef__custentity_fmt_cur_sales_order": {
+            "internalId": "2570",
+            "name": "Sales Order #SLS00000452",
+            "externalId": null,
+            "typeId": "-30"
+          },
+          "BooleanCustomFieldRef__custentity_fmt_cust_credit_on_hold": "false",
+          "SelectCustomFieldRef__custentity6": {
+            "internalId": "4",
+            "name": "Computers, Peripherals, and Software",
+            "externalId": null,
+            "typeId": "15"
+          },
+          "BooleanCustomFieldRef__custentity_2663_direct_debit": "false",
+          "BooleanCustomFieldRef__custentity18": "false",
+          "BooleanCustomFieldRef__custentity_2663_customer_refund": "false"
+        }
+      ]
+    },
+    "taxable": false,
+    "lastModifiedDate": "2015-01-22T20:10:20-08:00",
+    "lastVisit": "2016-02-24T11:41:36-08:00",
+    "externalId": "entity-5",
+    "entityId": "Alex Wolfe",
+    "subsidiary": {
+      "externalId": null,
+      "type": null,
+      "internalId": "1",
+      "name": "Honeycomb Mfg."
+    },
+    "clickStream": "HOME",
+    "shipComplete": false,
+    "firstName": "Alex",
+    "stage": "CUSTOMER",
+    "creditHoldOverride": "AUTO",
+    "phone": "650-555-9788",
+    "consolAging": 0,
+    "entityStatus": {
+      "externalId": null,
+      "type": null,
+      "internalId": "13",
+      "name": "CUSTOMER-Closed Won"
+    },
+    "aging": 0,
+    "startDate": "2015-04-19T00:00:00-07:00",
+    "defaultAddress": "US"
+  }
+]

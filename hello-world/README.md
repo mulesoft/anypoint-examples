@@ -22,7 +22,7 @@ The Hello World example consists of one simple [Mule flow](http://www.mulesoft.o
 
 The request-response inbound [HTTP endpoint](http://www.mulesoft.org/documentation/display/current/HTTP+Connector) receives requests the end user submits to the Web service. Because it has a request-response message exchange pattern, this HTTP endpoint is responsible for both receiving and returning messages. The descriptive notes included in the configuration of the endpoint helps other developers understand the actions the element performs in the context of the application.
 
-As its name suggests, the [Set Payload transformer](http://www.mulesoft.org/documentation/display/current/Set+Payload+Transformer+Reference) sets a value in the message payload. In this example, the value utilizes a [Mule expression](http://www.mulesoft.org/documentation/display/current/Mule+Expression+Language+MEL) to set a static string on the payload. Like the HTTP endpoint, the descriptive notes included in the configuration helps other developers understand the actions the element performs in the context of the application.
+As its name suggests, the [Set Payload transformer](http://www.mulesoft.org/documentation/display/current/Set+Payload+Transformer+Reference) sets a value in the message payload. In this example, the value utilizes a Mule expression to set a static string on the payload. Like the HTTP endpoint, the descriptive notes included in the configuration helps other developers understand the actions the element performs in the context of the application.
 
 ### Documentation
 

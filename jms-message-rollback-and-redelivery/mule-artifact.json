@@ -1,0 +1,19 @@
+{
+  "configs": [
+    "jms-message-rollback-and-redelivery.xml"
+  ],
+  "redeploymentEnabled": true,
+  "name": "jms-message-rollback-and-redelivery",
+  "minMuleVersion": "4.0.0",
+  "requiredProduct": "MULE_EE",
+  "classLoaderModelLoaderDescriptor": {
+    "id": "mule",
+    "attributes": {
+      "exportedResources": []
+    }
+  },
+  "bundleDescriptorLoader": {
+    "id": "mule",
+    "attributes": {}
+  }
+}

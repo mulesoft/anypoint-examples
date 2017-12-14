@@ -1,0 +1,48 @@
+#%RAML 1.0
+title: Netsuite-Data-retrieval-Example
+
+version: v1
+baseUri: http://localhost:8081/api
+    
+/customers:
+  get:  
+    description: "Return a list of customers"
+    queryParameters:
+      name:
+        description: "String which has to name start with"
+    responses:
+      200:
+        body:
+          application/json:
+            example: !include customers-response.json
+/items:
+  get:
+    description: "Return a list of items"
+    queryParameters:
+      quantity: {
+          description: "Quantity of the items",          
+          type: integer,
+          default: 0
+        }
+      operator: {
+          description: "Operator for the quantity number",
+          enum: [LESS_THAN, GREATER_THAN, EQUAL_TO, LESS_THAN_OR_EQUAL_TO, GREATER_THAN_OR_EQUAL_TO ],
+          default: GREATER_THAN
+        }
+    responses:
+      200:
+        body:
+          application/json:
+            example: !include items-response.json
+/opportunities: 
+  get:
+    description: "Return a list of Opportunities"
+    queryParameters:
+      title: {
+          description: "String which has to title start with"
+        }
+    responses:
+      200:
+        body:
+          application/json:
+            example: !include opportunities-response.json

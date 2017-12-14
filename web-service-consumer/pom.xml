@@ -1,87 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project 
+    xmlns="http://maven.apache.org/POM/4.0.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>org.mule.examples</groupId>
+        <artifactId>examples-catalog</artifactId>
+        <version>2.0.0-SNAPSHOT</version>
+    </parent>
 
-	<groupId>org.mule.examples</groupId>
-	<artifactId>web-service-consumer</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>web-service-consumer</artifactId>
     <packaging>mule-application</packaging>
-
-	<name>web-service-consumer</name>
+    <name>web-service-consumer</name>
 
     <properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <mule.connectors.version>1.0.0</mule.connectors.version>
+    </properties>
 
-		<app.runtime>4.0.0</app.runtime>
-		<mule.maven.plugin.version>3.0.0</mule.maven.plugin.version>
-		<mule.connectors.version>1.0.0</mule.connectors.version>
-	</properties>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.mule.tools.maven</groupId>
-				<artifactId>mule-maven-plugin</artifactId>
-				<version>${mule.maven.plugin.version}</version>
-				<extensions>true</extensions>
-				<configuration>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-
-	<dependencies>
-		<dependency>
+    <dependencies>
+        <dependency>
             <groupId>org.mule.connectors</groupId>
             <artifactId>mule-http-connector</artifactId>
             <version>${mule.connectors.version}</version>
             <classifier>mule-plugin</classifier>
         </dependency>
-    	<dependency>
+        <dependency>
             <groupId>org.mule.connectors</groupId>
             <artifactId>mule-wsc-connector</artifactId>
             <version>${mule.connectors.version}</version>
             <classifier>mule-plugin</classifier>
         </dependency>
     </dependencies>
-
-	<repositories>
-          <repository>
-            <id>anypoint-exchange</id>
-            <name>Anypoint Exchange</name>
-            <url>https://maven.anypoint.mulesoft.com/api/v1/maven</url>
-            <layout>default</layout>
-        </repository>
-        <repository>
-            <id>mulesoft-releases</id>
-            <name>MuleSoft Releases Repository</name>
-            <url>https://repository.mulesoft.org/releases/</url>
-            <layout>default</layout>
-        </repository>
-        <repository>
-            <id>mulesoft-snapshots</id>
-            <name>MuleSoft Snapshots Repository</name>
-            <url>https://repository.mulesoft.org/snapshots/</url>
-            <layout>default</layout>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>mulesoft-releases</id>
-            <name>mulesoft release repository</name>
-            <layout>default</layout>
-            <url>http://repository.mulesoft.org/releases/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-        <pluginRepository>
-            <id>mulesoft-snapshots</id>
-            <name>mulesoft snapshots repository</name>
-            <layout>default</layout>
-            <url>http://repository.mulesoft.org/snapshots/</url>
-        </pluginRepository>
-    </pluginRepositories>
-
 </project>

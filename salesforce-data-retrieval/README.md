@@ -69,7 +69,6 @@ The Catch Exception Strategy is implemented to handle errors, such as using inva
 ### Go Further
 
 - Learn more about the [HTTP endpoint](http://www.mulesoft.org/documentation/display/current/HTTP+Connector).
-- Learn more about the [Mule Expression Language](http://www.mulesoft.org/documentation/display/current/Mule+Expression+Language+MEL) 
 - Learn more about the [Expression component](http://www.mulesoft.org/documentation/display/current/Expression+Component+Reference) 
 - Learn more about the [Salesforce component](http://www.mulesoft.org/documentation/display/current/Salesforce+Connector)
 - Learn more about the [Error Handling](http://www.mulesoft.org/documentation/display/current/Error+Handling)

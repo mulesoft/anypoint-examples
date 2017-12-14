@@ -71,6 +71,5 @@ Finally, the POST HTTP request is made to http://localhost:8081/login with the b
 
 - Learn more about the [HTTP connector](http://www.mulesoft.org/documentation/display/current/HTTP+Connector).
 - Learn more about [Error Handling](http://www.mulesoft.org/documentation/display/current/Error+Handling)
-- Learn more about [Mule Expression Language](http://www.mulesoft.org/documentation/display/current/Mule+Expression+Language+MEL) 
 - Learn more about the [Filter component](http://www.mulesoft.org/documentation/display/current/Filters).
 - Learn more about the [Parse Template component](http://www.mulesoft.org/documentation/display/current/Parse+Template+Reference)

@@ -1,5 +1,5 @@
 # Import leads into Salesforce
-#### Enterprise, CloudHub ####
+### Enterprise, CloudHub ####
 
 This application uses pre-packaged tools to intelligently connect with Salesforce. Based on a simple use case, the application takes a CSV file of leads and uploads the lead information to an active Salesforce user account. It uses DataSense and the Anypoint DataMapper Transformer to map and transform data, thereby facilitating quick integration with this Software as a Service (SaaS) provider.
 

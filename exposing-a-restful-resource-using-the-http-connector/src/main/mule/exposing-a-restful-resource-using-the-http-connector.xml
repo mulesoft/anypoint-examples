@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="f21137c7-0d68-4a39-968b-3d1618568589" >
+		<http:listener-connection host="0.0.0.0" port="{http.port}" />
+	</http:listener-config>
+	<os:object-store name="Object_store" doc:name="Object store" doc:id="c721e8e0-3599-4c29-acc7-4bbb30013cec" />
+	<flow name="storePersonFlow" doc:id="2d611c4c-edec-4b75-aa94-25474d145040" >
+		<http:listener doc:name="POST/person" doc:id="a5ed0fce-aa12-4e00-a68c-fe99008f1559" allowedMethods="POST" config-ref="HTTP_Listener_config" path="/person" outputMimeType="application/json">
+		</http:listener>
+		<ee:transform doc:name="input data" doc:id="ad531934-2920-4714-8ce1-de83f6afe4ad" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	personId:  uuid(),
+ 	firstname: payload.firstname,
+ 	lastname: payload.lastname,
+ 	age: payload.age,
+ 	address: payload.address
+} 
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<os:store doc:name="Store person" doc:id="147fdcaf-5886-45dc-b53b-bb4787566f4d" key="#[payload.personId]" objectStore="Object_store"/>
+		<ee:transform doc:name="Response message" doc:id="4bebf139-63e9-479b-b4da-3e8a7096f521" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	personId: payload.personId,
+	message: "Person was created"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="retrievePersonFlow" doc:id="7e2a4d0c-d689-4e4e-8210-688b5a0722a6" >
+		<http:listener doc:name="GET/person/{personId}" doc:id="1ff9b8f8-986a-416c-8001-2a3e3bcf115b" config-ref="HTTP_Listener_config" path="/person/{personId}" allowedMethods="GET">
+			<http:response statusCode="#[vars.httpStatus]" />
+		</http:listener>
+		<try doc:name="Try" doc:id="e92931bd-1db1-4f10-bc4c-f4d252608e51" >
+			<os:retrieve doc:name="Retrieve person" doc:id="edab8214-060f-4f61-af01-b8d5884548ea" key="#[attributes.uriParams.personId]" objectStore="Object_store">
+		</os:retrieve>
+			<error-handler>
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="6f19c4e6-3b84-49c3-a675-1b22e6deabab" type="EXPRESSION" when="#[error.errorType.identifier == 'KEY_NOT_FOUND']">
+					<ee:transform doc:name="Not Found" doc:id="e8f6db11-fbf2-4bb2-9895-4087ce6b4d1e" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	message: "Not found"
+}]]></ee:set-payload>
+						</ee:message>
+						<ee:variables >
+							<ee:set-variable variableName="httpStatus" ><![CDATA[%dw 2.0
+output application/java
+---
+404]]></ee:set-variable>
+						</ee:variables>
+					</ee:transform>
+				</on-error-continue>
+			</error-handler>
+		</try>
+		<ee:transform doc:name="Response message" doc:id="0e905320-c544-435c-94cb-8d5307af1a3b">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+					<ee:variables>
+					</ee:variables>
+		</ee:transform>
+	</flow>
+	<flow name="retrieveAllPersonsFlow" doc:id="79cdd5a3-9545-4c7f-ae22-a5a8278c05f0" >
+		<http:listener doc:name="GET/person" doc:id="5ed8153c-f88a-4593-bcf8-0efcd0eb8ada" config-ref="HTTP_Listener_config" path="/person" allowedMethods="GET"/>
+		<os:retrieve-all doc:name="Retrieve all person" doc:id="6c606545-a39c-458e-a90e-5efc5aadbd9b" objectStore="Object_store"/>
+		<ee:transform doc:name="Response message" doc:id="1af6d4ba-257c-4975-bd45-569df7e0f0c6" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+import dw::core::Objects
+---
+Objects::entrySet(payload) map (item) -> item.value]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

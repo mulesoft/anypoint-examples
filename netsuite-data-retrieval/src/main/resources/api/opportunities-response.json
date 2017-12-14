@@ -1,0 +1,113 @@
+[
+  {
+    "tranId": "OPP00000044",
+    "estGrossProfitPercent": 100,
+    "salesRep": {
+      "externalId": null,
+      "type": null,
+      "internalId": "23",
+      "name": "Clark Koozer"
+    },
+    "projectedTotal": 3875.85,
+    "title": "Short wave",
+    "expectedCloseDate": "2014-12-05T00:00:00-08:00",
+    "internalId": "1271",
+    "currencyName": "USA",
+    "exchangeRate": 1,
+    "weightedTotal": 1937.93,
+    "currency": {
+      "externalId": null,
+      "type": null,
+      "internalId": "1",
+      "name": "USA"
+    },
+    "totalCostEstimate": 0,
+    "lastModifiedDate": "2015-01-01T12:13:44-08:00",
+    "leadSource": {
+      "externalId": null,
+      "type": null,
+      "internalId": "100003",
+      "name": "Electronics Retail Trade Show"
+    },
+    "probability": 50,
+    "daysOpen": 349,
+    "forecastType": {
+      "externalId": null,
+      "type": null,
+      "internalId": "0",
+      "name": "Omitted"
+    },
+    "subsidiary": {
+      "externalId": null,
+      "type": null,
+      "internalId": "1",
+      "name": "Honeycomb Mfg."
+    },
+    "createdDate": "2015-05-03T10:55:10-07:00",
+    "entityStatus": {
+      "externalId": null,
+      "type": null,
+      "internalId": "10",
+      "name": "Proposal"
+    },
+    "estGrossProfit": 3875.85,
+    "shippingAddress": {
+      "zip": "94002",
+      "country": "UNITED_STATES",
+      "addr2": "Suite 700",
+      "addr1": "123 Main St.",
+      "city": "San Mate",
+      "addr3": null,
+      "addrText": "Williams Electronics and Communications
+<br>123 Main St.
+  <br>Suite 700
+    <br>San Mate CA 94002
+      <br>United States",
+      "addrPhone": null,
+      "internalId": "2475",
+      "addressee": "Williams Electronics and Communications",
+      "attention": null,
+      "state": "CA",
+      "override": false,
+      "nullFieldList": null,
+      "customFieldList": null
+    },
+    "tranDate": "2015-04-03T00:00:00-07:00",
+    "location": {
+      "externalId": null,
+      "type": null,
+      "internalId": "2",
+      "name": "01: San Francisco"
+    },
+    "billingAddress": {
+      "zip": "94002",
+      "country": "UNITED_STATES",
+      "addr2": "Suite 700",
+      "addr1": "123 Main St.",
+      "city": "San Mate",
+      "addr3": null,
+      "addrText": "Williams Electronics and Communications
+        <br>123 Main St.
+          <br>Suite 700
+            <br>San Mate CA 94002
+              <br>United States",
+      "addrPhone": null,
+      "internalId": null,
+      "addressee": "Williams Electronics and Communications",
+      "attention": null,
+      "state": "CA",
+      "override": null,
+      "nullFieldList": null,
+      "customFieldList": null
+    },
+    "shipIsResidential": false,
+    "isBudgetApproved": false,
+    "entity": {
+      "externalId": null,
+      "type": null,
+      "internalId": "1066",
+      "name": "Williams Electronics and Communications"
+    },
+    "status": "Issued Quote"
+  }
+]

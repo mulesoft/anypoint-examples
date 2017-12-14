@@ -1,0 +1,62 @@
+version: 1
+
+dn: dc=my-domain,dc=com
+objectClass: organization
+objectClass: dcObject
+dc: my-domain
+o: Example Corporation
+description: The Example Corporation
+
+dn: cn=Manager,dc=my-domain,dc=com
+objectClass: organizationalRole
+cn: Manager
+description: Directory Manager
+
+dn: ou=groups,dc=my-domain,dc=com
+objectClass: top
+objectClass: organizationalUnit
+ou: groups
+
+dn: ou=people,dc=my-domain,dc=com
+objectClass: top
+objectClass: organizationalUnit
+ou: people
+
+dn: cn=Administrators,ou=groups,dc=my-domain,dc=com
+objectClass: top
+objectClass: groupOfNames
+cn: Administrators
+member: cn=admin,ou=people,dc=my-domain,dc=com
+
+dn: cn=admin,ou=people,dc=my-domain,dc=com
+objectClass: top
+objectClass: person
+cn: admin
+sn: admin
+userPassword:: bW1jYWRtaW4=
+
+dn: cn=Developers,ou=groups,dc=my-domain,dc=com
+objectClass: top
+objectClass: groupOfNames
+cn: Developers
+member: cn=admin,ou=people,dc=my-domain,dc=com
+
+dn: cn=testuser1,ou=people,dc=my-domain,dc=com
+objectClass: top
+objectClass: person
+cn: testuser1
+sn: testuser1
+userPassword:: dGVzdHVzZXIxMTIz
+
+dn: cn=mmc,ou=people,dc=my-domain,dc=com
+objectClass: top
+objectClass: person
+cn: mmc
+sn: mmc
+userPassword:: bW1jMTIz
+
+dn: cn=testgroup,ou=groups,dc=my-domain,dc=com
+objectClass: top
+objectClass: groupOfNames
+cn: testgroup
+member: cn=testuser1,ou=people,dc=my-domain,dc=com

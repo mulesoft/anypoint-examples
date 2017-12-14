@@ -1,0 +1,20 @@
+{
+  "domain": "default",
+  "configs": [
+    "querying-db-attaching-results-to-email.xml"
+  ],
+  "redeploymentEnabled": true,
+  "name": "querying-a-db-and-attaching-results-to-an-email",
+  "minMuleVersion": "4.0.0",
+  "requiredProduct": "MULE_EE",
+  "classLoaderModelLoaderDescriptor": {
+    "id": "mule",
+    "attributes": {
+      "exportedResources": []
+    }
+  },
+  "bundleDescriptorLoader": {
+    "id": "mule",
+    "attributes": {}
+  }
+}

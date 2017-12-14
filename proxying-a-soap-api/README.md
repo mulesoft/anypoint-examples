@@ -20,13 +20,13 @@ Complete the following procedure to create, then run this example in your own in
 
 1. Open the Example project in Anypoint Studio from [Anypoint Exchange](http://www.mulesoft.org/documentation/display/current/Anypoint+Exchange).
 2. In your application in Studio, click the **Global Elements** tab. Double-click the HTTP Listener global element to open its **Global Element Properties** panel. Change the contents of the **port** field to required HTTP port e.g. 8081. 
-3. Double-click the Web Service Consumer global element to open its **Global Element Properties** panel. Change the contents of the **wsdl location** field to required path to tshirt.wsdl file.
-4. In the Package Explorer pane in Studio, right-click the project name, then select Run As > Mule Application. Studio runs the application and Mule is up and kicking!
-5. Send the following GET request to your API via the proxy URL: http://localhost:8081/listInventory.
+3. In the Package Explorer pane in Studio, right-click the project name, then select Run As > Mule Application. Studio runs the application and Mule is up and kicking!
+5. Send the following POST request with xml body to your API via the proxy URL: http://localhost:8081/listInventory.
 
-	You can use a browser extension such as Postman or the curl command line utility.
+		    <ns1:ListInventory xmlns:ns1='http://mulesoft.org/tshirt-service' />
 
-	As a response to this request, you should receive a list of inventories.
+
+You can use a browser extension such as Postman or the curl command line utility. As a response to this request, you should receive a list of inventories.
 
 ### How it Works ###
 
@@ -45,6 +45,8 @@ Studio includes a feature that enables you to easily export all the documentatio
 
 Follow [the procedure](http://www.mulesoft.org/documentation/display/current/Importing+and+Exporting+in+Studio#ImportingandExportinginStudio-ExportingStudioDocumentation) to export auto-generated Studio documentation.
 
-### Go Further
+### Go Further 
 
 - Mulesoft offer an out of the box solution for proxying and managing existing APIs using the Anypoint API Platform. To see the detailed documentation and capabilities, please refer to: [Proxying Your API](http://www.mulesoft.org/documentation/display/current/Proxying+Your+API)
+
+

@@ -5,7 +5,7 @@
     "currency.xml"
   ],
   "redeploymentEnabled": true,
-  "name": "order",
+  "name": "processing-orders-with-dataweave-and-APIkit",
   "minMuleVersion": "4.0.0",
   "requiredProduct": "MULE_EE",
   "classLoaderModelLoaderDescriptor": {

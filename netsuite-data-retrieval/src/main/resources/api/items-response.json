@@ -1,0 +1,50 @@
+[
+  {
+    "internalId": "9",
+    "item": {
+      "externalId": null,
+      "type": null,
+      "internalId": "702",
+      "name": "CUS00001"
+    },
+    "location": {
+      "externalId": null,
+      "type": null,
+      "internalId": "1",
+      "name": "02: Boston"
+    },
+    "subsidiary": {
+      "externalId": null,
+      "type": null,
+      "internalId": "1",
+      "name": "Honeycomb Mfg."
+    }
+  },
+  {
+    "internalId": "18",
+    "item": {
+      "externalId": null,
+      "type": null,
+      "internalId": "721",
+      "name": "SHT00001"
+    },
+    "location": {
+      "externalId": null,
+      "type": null,
+      "internalId": "1",
+      "name": "02: Boston"
+    },
+    "units": {
+      "externalId": null,
+      "type": null,
+      "internalId": "15",
+      "name": "Square Feet"
+    },
+    "subsidiary": {
+      "externalId": null,
+      "type": null,
+      "internalId": "1",
+      "name": "Honeycomb Mfg."
+    }
+  }
+]

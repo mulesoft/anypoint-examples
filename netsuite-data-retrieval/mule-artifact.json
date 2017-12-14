@@ -1,0 +1,24 @@
+{
+  "configs": [
+    "netsuite-api.xml"
+  ],
+  "redeploymentEnabled": true,
+  "name": "netsuite-data-retrieval",
+  "minMuleVersion": "4.0.0",
+  "requiredProduct": "MULE_EE",
+  "classLoaderModelLoaderDescriptor": {
+    "id": "mule",
+    "attributes": {
+      "exportedResources": [
+        "api/customers-response.json",
+        "api/items-response.json",
+        "api/netsuite-api.raml",
+        "api/opportunities-response.json"
+      ]
+    }
+  },
+  "bundleDescriptorLoader": {
+    "id": "mule",
+    "attributes": {}
+  }
+}

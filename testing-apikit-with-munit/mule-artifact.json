@@ -1,0 +1,21 @@
+{
+  "configs": [
+    "api.xml"
+  ],
+  "redeploymentEnabled": true,
+  "name": "testing-apikit-with-munit",
+  "minMuleVersion": "4.0.0",
+  "requiredProduct": "MULE_EE",
+  "classLoaderModelLoaderDescriptor": {
+    "id": "mule",
+    "attributes": {
+      "exportedResources": [
+        "api\\api.raml"
+      ]
+    }
+  },
+  "bundleDescriptorLoader": {
+    "id": "mule",
+    "attributes": {}
+  }
+}

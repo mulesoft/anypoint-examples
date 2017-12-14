@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ldap="http://www.mulesoft.org/schema/mule/ldap"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ldap http://www.mulesoft.org/schema/mule/ldap/current/mule-ldap.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="2cb37f60-e982-432e-8b34-2279c9967766" >
+		<http:listener-connection host="0.0.0.0" port="${http.port}" />
+	</http:listener-config>
+	<ldap:config name="LDAP_Configuration" doc:name="LDAP Configuration" doc:id="94567ab4-e228-4868-ad64-cf1d35daf16c" >
+		<ldap:basic-connection authDn="${ldap.authDn}" authPassword="${ldap.password}" url="${ldap.url}" />
+	</ldap:config>
+	<flow name="extracting-data-from-ldap-directoryFlow" doc:id="a322b190-7292-41bc-b523-fcda88dc7eac" >
+		<http:listener doc:name="Listener" doc:id="b6e1065f-8286-4420-bd35-dc7f53428560" config-ref="HTTP_Listener_config" path="/"/>
+		<ldap:search doc:name="Search users in LDAP" doc:id="7efd5845-ebf1-496b-832b-4ef71923f11a" config-ref="LDAP_Configuration" baseDn="ou=people" filter="(objectClass=*)"/>
+		<set-payload value="#[output application/json --- payload]" doc:name="Build response" doc:id="b7ee66a9-cad5-4c72-9fa9-ee6752a3c70b" mimeType="application/json"/>
+	</flow>
+</mule>

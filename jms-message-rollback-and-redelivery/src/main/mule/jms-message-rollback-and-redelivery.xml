@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting" xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
+	<jms:config name="JMS_Config" doc:name="JMS Config" doc:id="5411c616-8b37-48d4-b875-2025440eef69" >
+		<jms:active-mq-connection username="admin" password="admin">
+			<jms:caching-strategy >
+				<jms:default-caching />
+			</jms:caching-strategy>
+			<jms:factory-configuration brokerUrl="tcp://localhost:61616" maxRedelivery="5"/>
+		</jms:active-mq-connection>
+		<jms:consumer-config>
+			<jms:consumer-type >
+				<jms:queue-consumer />
+			</jms:consumer-type>
+		</jms:consumer-config>
+	</jms:config>
+	<flow name="jms-message-rollback-and-redeliveryFlow" doc:id="6b6ce959-6c63-4656-bfd2-8f974ed09362" >
+		<jms:listener doc:name="Listen to JMS queue" doc:id="6b0fad44-91d0-439d-b040-85a3c319573a" config-ref="JMS_Config" destination="in" transactionalAction="ALWAYS_BEGIN">
+			<jms:consumer-type >
+				<jms:queue-consumer />
+			</jms:consumer-type>
+		</jms:listener>
+		<logger level="INFO" doc:name="Logger" doc:id="62ad318a-895b-4a35-adc7-ab3241ca9cb8" message="DeliveryCount: #[attributes.Properties.jmsxProperties.jmsxDeliveryCount]"/>
+		<choice doc:name="Choice" doc:id="ba37c3e5-346d-4362-b2a0-927e573d107f" >
+			<when expression="#[attributes.Properties.jmsxProperties.jmsxDeliveryCount == 5]" >
+				<logger level="INFO" doc:name="No exception thrown" doc:id="7be6febb-2e5b-4347-a786-d8de42aafc0e" message="Transaction without error" />
+			</when>
+			<otherwise >
+				<scripting:execute engine="groovy" doc:name="Execute the failing script" doc:id="229b4136-ef94-43e0-854a-8f38074cc7b2">
+					<scripting:code>throw new Exception(&quot;This is the reason why the processing has failed.&quot;);
+					</scripting:code>
+				</scripting:execute>
+			</otherwise>
+		</choice>
+		<jms:publish doc:name="Send to JMS topic" doc:id="fd508577-57a8-4f93-939d-9f64912b2331" config-ref="JMS_Config" destination="topic1" destinationType="TOPIC" transactionalAction="ALWAYS_JOIN" />
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="06ea0ce5-bbc4-411a-aea9-85dfa323cacc">
+				<logger level="INFO" doc:name="Rollback transaction" doc:id="554e9b0d-544a-41a9-8de8-cc9cf63f0e57" message="The message rolls back to its original state for reprocessing." />
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+</mule>

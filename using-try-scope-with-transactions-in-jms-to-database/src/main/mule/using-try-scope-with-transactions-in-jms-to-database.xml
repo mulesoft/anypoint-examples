@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
+	<jms:config name="ActiveMQ" doc:name="JMS Config" doc:id="5411c616-8b37-48d4-b875-2025440eef69" >
+		<jms:active-mq-connection username="admin" password="admin">
+			<jms:caching-strategy >
+				<jms:default-caching />
+			</jms:caching-strategy>
+			<jms:factory-configuration brokerUrl="tcp://localhost:61616" maxRedelivery="2"/>
+		</jms:active-mq-connection>
+		<jms:consumer-config>
+			<jms:consumer-type >
+				<jms:queue-consumer />
+			</jms:consumer-type>
+		</jms:consumer-config>
+	</jms:config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="59194256-5c2f-49ea-8146-c46fbbf41c61" >
+		<db:my-sql-connection host="${db.host}" port="${db.port}" user="${db.user}" password="${db.password}" database="${db.name}" />
+	</db:config>
+	<configuration-properties doc:name="Configuration properties" doc:id="3fb11fce-6724-4b96-8d4c-f164e88d8f98" file="mule-artifact.properties" />
+	<flow name="using-try-scope-with-transactions-in-jms-to-databaseFlow" doc:id="c22de628-9b01-4855-ae2c-21de0466e19b" >
+		<jms:listener doc:name="Listen to JMS messages" doc:id="84a791ed-5c3e-4559-a5cf-2e7d4fc6c0ce" config-ref="ActiveMQ" destination="in" ackMode="AUTO" inboundContentType="application/xml" inboundEncoding="UTF-8">
+			<jms:consumer-type >
+				<jms:queue-consumer />
+			</jms:consumer-type>
+		</jms:listener>
+		<try doc:name="Try" doc:id="eb785d75-c616-4dcd-8a9f-2744efb45e64" transactionalAction="ALWAYS_BEGIN">
+			<db:insert doc:name="Insert into Database" doc:id="8aa2371d-2586-4744-b207-0e6a077e7463" config-ref="Database_Config">
+				<db:sql>INSERT INTO orders (item_id, item_units, customer_id) values ( :itemId, :itemUnits, :customerId)</db:sql>
+				<db:input-parameters><![CDATA[#[{ 'itemId' : payload.order.itemId, 'itemUnits' : payload.order.itemUnits, 'customerId' : payload.order.customerId}]]]></db:input-parameters>
+			</db:insert>
+			<scripting:execute engine="groovy" doc:name="Throw an exception" doc:id="f82d5bc7-c030-44b6-aa74-3d1f91d09cca" >
+				<scripting:code >throw new Exception(&quot;This is the reason why the processing has failed.&quot;);</scripting:code>
+			</scripting:execute>
+			<jms:publish doc:name="Send a JMS message" doc:id="7ec5c927-94a9-454b-bb4e-61c5bb6bdff9" config-ref="ActiveMQ" destination="out" />
+			<error-handler>
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="12b47ab0-d774-42f7-b643-07ac262e7805">
+					<logger level="INFO" doc:name="Rollback transaction" doc:id="e445c86b-6c19-4bd7-b336-03d3e80f6596" message="The message rolls back to its original state for reprocessing."/>
+				</on-error-propagate>
+			</error-handler>
+		</try>
+	</flow>
+</mule>

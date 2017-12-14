@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:netsuite="http://www.mulesoft.org/schema/mule/netsuite"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd 
+http://www.mulesoft.org/schema/mule/netsuite http://www.mulesoft.org/schema/mule/netsuite/current/mule-netsuite.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="netsuite-api-httpListenerConfig">
+		<http:listener-connection host="0.0.0.0"
+			port="8081" />
+	</http:listener-config>
+	<netsuite:config name="NetSuite_Config" doc:name="NetSuite Config"
+		doc:id="54c21fad-e7e5-409e-9b4a-848d81dae3f7">
+		<netsuite:login-authentication-connection
+			email="${netsuite.email}" password="${netsuite.password}" account="${netsuite.account}"
+			roleId="${netsuite.roleId}" applicationId="${netsuite.appId}" readTimeout="100000" connectionTimeout="100000">
+			<reconnection>
+				<reconnect />
+			</reconnection>
+		</netsuite:login-authentication-connection>
+	</netsuite:config>
+	<apikit:config name="netsuite-api-config" raml="netsuite-api.raml"
+		outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+	<configuration-properties doc:name="Configuration properties" doc:id="f81c0c24-2889-40ad-9a84-3057ce4e91c6" file="mule-artifact.properties" />
+	<flow name="netsuite-api-main">
+		<http:listener config-ref="netsuite-api-httpListenerConfig"
+			path="/api/*">
+			<http:response statusCode="#[vars.httpStatus default 200]">
+				<http:headers>#[vars.outboundHeaders default {}]</http:headers>
+			</http:response>
+			<http:error-response statusCode="#[vars.httpStatus default 500]">
+				<http:body>#[payload]</http:body>
+				<http:headers>#[vars.outboundHeaders default {}]</http:headers>
+			</http:error-response>
+		</http:listener>
+		<apikit:router config-ref="netsuite-api-config" />
+		<error-handler>
+			<on-error-propagate type="APIKIT:BAD_REQUEST">
+				<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Bad request"}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="httpStatus">400
+						</ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+			<on-error-propagate type="APIKIT:NOT_FOUND">
+				<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="httpStatus">404
+						</ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+			<on-error-propagate type="APIKIT:METHOD_NOT_ALLOWED">
+				<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Method not allowed"}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="httpStatus">405
+						</ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+			<on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
+				<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not acceptable"}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="httpStatus">406
+						</ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+			<on-error-propagate type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+				<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Unsupported media type"}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="httpStatus">415
+						</ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+			<on-error-propagate type="APIKIT:NOT_IMPLEMENTED">
+				<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not Implemented"}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="httpStatus">501
+						</ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="netsuite-api-console">
+		<http:listener config-ref="netsuite-api-httpListenerConfig"
+			path="/console/*">
+			<http:response statusCode="#[vars.httpStatus default 200]">
+				<http:headers>#[vars.outboundHeaders default {}]</http:headers>
+			</http:response>
+			<http:error-response statusCode="#[vars.httpStatus default 500]">
+				<http:body>#[payload]</http:body>
+				<http:headers>#[vars.outboundHeaders default {}]</http:headers>
+			</http:error-response>
+		</http:listener>
+		<apikit:console config-ref="netsuite-api-config" />
+		<error-handler>
+			<on-error-propagate type="APIKIT:NOT_FOUND">
+				<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="httpStatus">404
+						</ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="get:\opportunities:netsuite-api-config">
+		<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+			xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:id="f613b606-09f0-46f7-b424-4824ef3148c1" doc:name="Prepare OpportunitySearch according to input params">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+	basic: {
+		title: {
+				operator: "STARTS_WITH",
+				searchValue: attributes.queryParams.title
+			} as Object {
+				class : "org.mule.module.netsuite.extension.api.SearchStringField"
+			}
+		}
+} as Object {
+	class : "org.mule.module.netsuite.extension.api.OpportunitySearch"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<netsuite:search pageSize="10" doc:name="Get Opportunities from Netsuite" doc:id="30abf609-313d-4b52-be64-5392081e61d9" config-ref="NetSuite_Config" key="OPPORTUNITY"/>
+		<set-payload value="#[output application/json --- payload]" doc:name="Build response" doc:id="9a02d7b6-e661-4200-b799-f512b2839778" mimeType="application/json" />
+	</flow>
+	<flow name="get:\items:netsuite-api-config">
+		<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+			xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:id="d012e57f-8b95-4e8c-82a8-333e52910edd" doc:name="Prepare ItemSupplyPlanSearchBasic according to input params">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+	quantity: {
+		operator: attributes.queryParams.operator,
+		searchValue: attributes.queryParams.quantity as Number
+	}
+} as Object {
+	class : "org.mule.module.netsuite.extension.api.ItemSupplyPlanSearchBasic"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<netsuite:search key="ITEM_SUPPLY_PLAN_BASIC" pageSize="10" doc:name="Get Item supply plan basic from NetSuite" doc:id="08a822e5-758e-4756-98f2-9ce1381cb8b1" config-ref="NetSuite_Config"/>
+		<set-payload value="#[output application/json --- payload]" doc:name="Build response" doc:id="e5324e00-20cb-4d93-97fb-b4dcf1da615c" mimeType="application/json" />
+	</flow>
+	<flow name="get:\customers:netsuite-api-config">
+		<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+			xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd"
+			doc:id="e6900539-c849-460c-bc2c-4cd2ffd338ef" doc:name="Prepare CustomerSearch according to input params">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+	basic: {
+		companyName: {
+			operator: "STARTS_WITH",
+			searchValue: attributes.queryParams.name
+		}
+	}
+} as Object {
+	class : "org.mule.module.netsuite.extension.api.CustomerSearch"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<netsuite:search pageSize="10" doc:name="Get Customers from Netsuite" doc:id="0da0489d-d7db-4091-b4c1-1f2c66118089" config-ref="NetSuite_Config" key="CUSTOMER"/>
+		<set-payload value="#[output application/json --- payload]" doc:name="Build response" doc:id="23b54b9b-7361-43b2-9a89-cc08a5ed9347" mimeType="application/json"/>
+	</flow>
+</mule>

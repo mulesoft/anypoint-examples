@@ -3,7 +3,7 @@
     "oauth2-authorization-code-using-the-http-connector.xml"
   ],
   "redeploymentEnabled": true,
-  "name": "oauth2-authorization-code-using-the-http-connector",
+  "name": "oauth2-authorization-code-using-the-HTTP-connector",
   "minMuleVersion": "4.0.0",
   "requiredProduct": "MULE_EE",
   "classLoaderModelLoaderDescriptor": {

@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+<project 
+	xmlns="http://maven.apache.org/POM/4.0.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<groupId>org.mule.examples</groupId>
 		<artifactId>examples-catalog</artifactId>
 		<version>2.0.0-SNAPSHOT</version>
 	</parent>
-	
-	<modelVersion>4.0.0</modelVersion>
-	<artifactId>hello-world</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
-    <packaging>mule-application</packaging>
 
+  <modelVersion>4.0.0</modelVersion>
+	<artifactId>hello-world</artifactId>
+	<packaging>mule-application</packaging>
 	<name>hello-world</name>
 
-    <properties>
+  <properties>
 		<munit.version>2.0.0</munit.version>
-    </properties>
+  </properties>
 
 	<build>
 		<plugins>
@@ -45,13 +46,14 @@
         </plugins>
 	</build>
 
-	<dependencies>
+  <dependencies>
 		<dependency>
 			<groupId>org.mule.connectors</groupId>
 			<artifactId>mule-http-connector</artifactId>
 			<version>${mule.connectors.version}</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
+
 		<dependency>
 			<groupId>org.mule.connectors</groupId>
 			<artifactId>mule-sockets-connector</artifactId>

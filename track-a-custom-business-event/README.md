@@ -2,7 +2,7 @@
 
 This example shows how to track data using the custom business event component. 
 
-#### Example use case
+### Example use case
 
 Order data in JSON format is sent through an HTTP endpoint to a DataWeave transformer. The custom DataWeave transformation is used to calculate the discount that is offered for a certain product type. The Custom Business event keeps track of the item name, number of units and price per unit for the order data.
 
