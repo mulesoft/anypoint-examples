@@ -1,9 +1,9 @@
 {
   "configs": [
-    "using-try-scope-with-transactions-in-jms-to-database.xml"
+    "using-transactional-scope-in-jms-to-database.xml"
   ],
   "redeploymentEnabled": true,
-  "name": "using-try-scope-with-transactions-in-jms-to-database",
+  "name": "using-transactional-scope-in-jms-to-database",
   "minMuleVersion": "4.0.0",
   "requiredProduct": "MULE_EE",
   "classLoaderModelLoaderDescriptor": {

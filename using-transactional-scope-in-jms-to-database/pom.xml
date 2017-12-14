@@ -8,9 +8,9 @@
 	</parent>
 	
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>using-try-scope-with-transactions-in-jms-to-database</artifactId>
+	<artifactId>using-transactional-scope-in-jms-to-database</artifactId>
 	<packaging>mule-application</packaging>
-	<name>using-try-scope-with-transactions-in-jms-to-database</name>
+	<name>using-transactional-scope-in-jms-to-database</name>
 
 
 	<properties>
