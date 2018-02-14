@@ -11,14 +11,14 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
 		<db:my-sql-connection host="${db.host}" port="${db.port}" user="${db.user}" password="${db.password}" database="${db.name}" />
 	</db:config>
 	<salesforce:sfdc-config name="Salesforce_Sfdc_config" doc:name="Salesforce Sfdc config" doc:id="97583da0-5499-4f2e-a610-5f6568d7e3c6" >
-		<salesforce:basic-connection username="${sfdc.username}" password="${sfdc.password}" securityToken="${sfdc.securityToken}" url="${sfdc.url}" />
+		<salesforce:basic-connection username="${sfdc.username}" password="${sfdc.password}" securityToken="${sfdc.securityToken}"/>
 	</salesforce:sfdc-config>
 	<configuration-properties file="mule-artifact.properties" doc:name="Configuration properties" doc:id="ca514625-7559-4c4d-a352-9acbc3a331dc" />
 
 	<flow name="salesforce2mysql-sync-with-batchFlow" doc:id="53a34921-3689-45b4-b11a-704d069ba8c4" >
 		<scheduler doc:name="Trigger sync every 60 seconds" doc:id="24568dee-e237-4b1f-a631-6129687fde13" >
 			<scheduling-strategy >
-				<fixed-frequency frequency="60" timeUnit="SECONDS"/>
+				<fixed-frequency frequency="${scheduler.frequency}" timeUnit="SECONDS" startDelay="${scheduler.startDelay}"/>
 			</scheduling-strategy>
 		</scheduler>
 		<salesforce:query config-ref="Salesforce_Sfdc_config" doc:name="Query Salesforce for Contacts" doc:id="5bb8333d-909a-4aba-84f7-59265bde2366" >
@@ -26,7 +26,7 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
 			<salesforce:parameters ><![CDATA[#[output applicaton/java
 ---
 {
-	"timestamp" : (now() - |P1D|) as String
+	"timestamp" : ${sfdc.query.lastModifiedDateLimit}
 }]]]></salesforce:parameters>
 		</salesforce:query>
 		<batch:job jobName="salesforce2mysql-sync-with-batchBatch_Job" doc:id="af98047c-1712-417e-8a7d-538e33df4f72" maxFailedRecords="200">

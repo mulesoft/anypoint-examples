@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd 
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<munit:config name="test-suite.xml" />
+	<munit:test name="test-suite-salesforce2mysql-sync-with-batchFlowTest" description="Test" doc:id="eca9b352-2a3c-4bb3-96c9-3bdcb167bc2f" >
+		<munit:enable-flow-sources>
+	        <munit:enable-flow-source value="salesforce2mysql-sync-with-batchFlow"/>	    
+    	</munit:enable-flow-sources>
+		<munit:behavior >
+			<db:delete doc:name="Delete all the contacts before the test is triggered" doc:id="4d7466c9-8cac-4023-ba26-366381c5355b" config-ref="Database_Config">
+				<db:sql >DELETE FROM contact</db:sql>
+			</db:delete>
+			<db:insert doc:name="Insert contact" doc:id="e4beaed5-d1fd-4e6f-b4e8-0e0228074924" config-ref="Database_Config">
+				<db:sql >INSERT INTO contact (first_name, last_name, email) VALUES (:firstName, :lastName, :email)</db:sql>
+				<db:input-parameters ><![CDATA[#[{ 'firstName' : 'TestFirstName2', 'lastName' : 'TestLastName2updated', 'email' : 'test.email2@email.com' }]]]></db:input-parameters>
+			</db:insert>
+			<salesforce:create doc:name="Create 3 test Contacts" doc:id="11bb6108-5d7d-4f41-9fb7-88f0effe5ead" config-ref="Salesforce_Sfdc_config" type="Contact">
+				<salesforce:records ><![CDATA[#[[{
+ "Email": "test.email1@email.com",
+ "FirstName": "TestFirstName1",
+ "LastName": "TestLastName1"
+},
+{
+ "Email": "test.email2@email.com",
+ "FirstName": "TestFirstName2",
+ "LastName": "TestLastName2"
+},
+{
+ "Email": "test.email3@email.com",
+ "FirstName": "TestFirstName3",
+ "LastName": "TestLastName3"
+}]]]]></salesforce:records>
+			</salesforce:create>
+			<set-variable value="#[payload map ($.id)]" doc:name="Store IDs into variable" doc:id="260fb731-8c97-4e30-afad-8f671a81fa52" variableName="sfdcIDs"/>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to salesforce2mysql-sync-with-batchFlow" doc:id="e88db0f0-6da9-4ed2-b30c-61d40806834b" name="salesforce2mysql-sync-with-batchFlow"/>
+			<scripting:execute engine="groovy" doc:name="Sleep for 15s until the processing is completed" doc:id="d8179941-bad3-4db5-a710-8962096fa053" >
+				<scripting:code >sleep(15000)</scripting:code>
+			</scripting:execute>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify DB Query is called three times" doc:id="7ad63392-f55a-40e8-9dd4-89c2ba189fbf" processor="db:select" times="3"/>
+			<munit-tools:verify-call doc:name="Verify DB INSERT is called at least three times" doc:id="3ad9bf70-5e83-46f7-9aea-daef497f3e6c" processor="db:insert" times="2">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute attributeName="doc:id" whereValue="9c53c69b-8a05-4252-9784-3f09d8c6d0c9" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify DB UPDATE was called once" doc:id="2baf05a2-1173-48e4-9a2a-d92d3fca025a" processor="db:update" times="1"/>
+			<db:delete doc:name="Clean up DB" doc:id="4d7466c9-8cac-4023-bs26-366381c5355b" config-ref="Database_Config">
+				<db:sql >DELETE FROM contact</db:sql>
+			</db:delete>
+			<salesforce:delete doc:name="Clean up SFDC" doc:id="ff0fdaf9-d926-4c62-b2a1-f92590f9d5ef" config-ref="Salesforce_Sfdc_config">
+				<salesforce:delete-ids ><![CDATA[#[vars.sfdcIDs]]]></salesforce:delete-ids>
+			</salesforce:delete>
+</munit:validation>
+	</munit:test>
+	<munit:test name="test-suite-noDataTest" description="Test" doc:id="eca9b352-2a3c-4bb3-96c9-3bdcb167bc2f" >
+		<munit:enable-flow-sources>
+	        <munit:enable-flow-source value="salesforce2mysql-sync-with-batchFlow"/>	    
+    	</munit:enable-flow-sources>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to salesforce2mysql-sync-with-batchFlow" doc:id="e88db0f0-6da9-4ed2-b30c-61d40806834b" name="salesforce2mysql-sync-with-batchFlow"/>
+			<scripting:execute engine="groovy" doc:name="Sleep for 5s until the processing is completed" doc:id="d8179941-bad3-4db5-a710-8962096fa053" >
+				<scripting:code >sleep(5000)</scripting:code>
+			</scripting:execute>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify DB Query is not called" doc:id="7ad63392-f55a-40e8-9dd4-89c2ba189fbf" processor="db:select" times="0"/>
+			<munit-tools:verify-call doc:name="Verify DB INSERT is not called" doc:id="3ad9bf70-5e83-46f7-9aea-daef497f3e6c" processor="db:insert" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute attributeName="doc:id" whereValue="9c53c69b-8a05-4252-9784-3f09d8c6d0c9" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify DB UPDATE was not called" doc:id="2baf05a2-1173-48e4-9a2a-d92d3fca025a" processor="db:update" times="0"/>
+</munit:validation>
+	</munit:test>
+</mule>
