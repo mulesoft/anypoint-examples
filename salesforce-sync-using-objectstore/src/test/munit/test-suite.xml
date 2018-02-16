@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd 
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	<munit:config name="test-suite.xml" />
+	<munit:test name="test-suite-salesforce-date-sync-using-watermarkingFlowTest" description="Test" doc:id="96d134ee-b4bb-4d4b-94b7-328b54150c90" >
+		<munit:enable-flow-sources>
+	        <munit:enable-flow-source value="salesforce-date-sync-using-watermarkingFlow"/>	    
+    	</munit:enable-flow-sources>
+		<munit:behavior >
+			<salesforce:create doc:name="Create 3 test Contacts" doc:id="11bb6108-5d7d-4f41-9fb7-88f0effe5ead" config-ref="Salesforce_Sfdc_config" type="Contact" target="testDataResponse">
+				<salesforce:records ><![CDATA[#[[{
+ "Email": "test.email1@email.com",
+ "FirstName": "TestFirstName1",
+ "LastName": "TestLastName1"
+},
+{
+ "Email": "test.email2@email.com",
+ "FirstName": "TestFirstName2",
+ "LastName": "TestLastName2"
+},
+{
+ "Email": "test.email3@email.com",
+ "FirstName": "TestFirstName3",
+ "LastName": "TestLastName3"
+}]]]]></salesforce:records>
+			</salesforce:create>
+		</munit:behavior>
+		<munit:execution >
+						<flow-ref doc:name="salesforce-date-sync-using-watermarkingFlow" doc:id="99d02fff-3672-4109-a09f-4d19a81c2eda" name="salesforce-date-sync-using-watermarkingFlow"/>
+			<scripting:execute engine="groovy" doc:name="Sleep for 5s until the processing is completed" doc:id="d8179941-bad3-4db5-a710-8962096fa053" >
+				<scripting:code >sleep(5000)</scripting:code>
+			</scripting:execute>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify the logger in batch step was called 3 times" doc:id="2656e524-ee98-491a-a5d7-f23db1cc87e4" processor="logger" times="3">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute attributeName="doc:id" whereValue="5b5510ef-6925-4413-9848-8c05868f8fa2" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<os:retrieve doc:name="Retrieve watermarking key" doc:id="c7d05dec-a81c-4fb9-b480-cf39fe31ab5b" objectStore="Object_store" key="lastUpdateTimestampKey" target="watermarkingTimestamp"/>
+			<munit-tools:assert-that doc:name="Assert that watermarking timestamp is correct" doc:id="7e16ba2c-d7c5-4c9d-9b02-b4323f4f854d" expression="#[vars.watermarkingTimestamp &gt; (now() -|PT1M|)]" is="#[MunitTools::equalTo(true)]" message="Watermarking timestamp is incorrect!"/>
+			<salesforce:delete doc:name="Clean up" doc:id="95f98c17-2d03-4d71-b215-2a0d7e51dfa7" config-ref="Salesforce_Sfdc_config">
+				<salesforce:delete-ids><![CDATA[#[vars.testDataResponse map ($.id)]]]></salesforce:delete-ids>
+			</salesforce:delete>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

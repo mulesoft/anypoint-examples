@@ -1,11 +1,11 @@
 {
-  "domain": "default",
   "configs": [
-    "salesforce-data-synchronization-using-watermarking-and-batch-processing.xml"
+    "salesforce-sync-using-objectstore.xml"
   ],
+  "secureProperties": [],
   "redeploymentEnabled": true,
   "name": "salesforce-data-synchronization-using-watermarking-and-batch-processing",
-  "minMuleVersion": "4.0.0",
+  "minMuleVersion": "4.1.0",
   "requiredProduct": "MULE_EE",
   "classLoaderModelLoaderDescriptor": {
     "id": "mule",

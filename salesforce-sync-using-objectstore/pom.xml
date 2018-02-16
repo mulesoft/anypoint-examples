@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project 
-	xmlns="http://maven.apache.org/POM/4.0.0" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<groupId>org.mule.examples</groupId>
 		<artifactId>examples-catalog</artifactId>
@@ -13,24 +11,40 @@
 	<packaging>mule-application</packaging>
 	<name>salesforce-data-synchronization-using-watermarking-and-batch-processing</name>
 
-	<properties>
-		<mule.connectors.version>1.0.0</mule.connectors.version>
+	<properties>		
 		<sfdc.connector.version>9.0.0</sfdc.connector.version>
-	</properties>
+		<munit.version>2.1.0</munit.version>
+    </properties>
+
+	<build>
+		<plugins>
+			<plugin>
+                <groupId>com.mulesoft.munit.tools</groupId>
+                <artifactId>munit-maven-plugin</artifactId>
+                <version>${munit.version}</version>
+                <executions>
+                    <execution>
+                        <id>test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                            <goal>coverage-report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <coverage>
+                        <runCoverage>true</runCoverage>
+                        <formats>
+                            <format>html</format>
+                        </formats>
+                    </coverage>
+                </configuration>
+            </plugin>
+        </plugins>
+	</build>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.mule.connectors</groupId>
-			<artifactId>mule-http-connector</artifactId>
-			<version>${mule.connectors.version}</version>
-			<classifier>mule-plugin</classifier>
-		</dependency>
-		<dependency>
-			<groupId>org.mule.connectors</groupId>
-			<artifactId>mule-sockets-connector</artifactId>
-			<version>${mule.connectors.version}</version>
-			<classifier>mule-plugin</classifier>
-		</dependency>
 		<dependency>
 			<groupId>org.mule.connectors</groupId>
 			<artifactId>mule-objectstore-connector</artifactId>
@@ -43,5 +57,24 @@
 			<version>${sfdc.connector.version}</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
-	</dependencies>
+		<dependency>
+            <groupId>com.mulesoft.munit</groupId>
+            <artifactId>munit-runner</artifactId>
+            <version>${munit.version}</version>
+            <classifier>mule-plugin</classifier>
+            <scope>test</scope>
+        </dependency>	<dependency>
+            <groupId>com.mulesoft.munit</groupId>
+            <artifactId>munit-tools</artifactId>
+            <version>${munit.version}</version>
+            <classifier>mule-plugin</classifier>
+            <scope>test</scope>
+        </dependency>
+		<dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-scripting-module</artifactId>
+            <version>${mule.connectors.version}</version>
+            <classifier>mule-plugin</classifier>
+        </dependency>
+    </dependencies>
 </project>
