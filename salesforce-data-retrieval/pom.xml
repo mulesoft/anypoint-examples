@@ -13,7 +13,7 @@
 
 	<properties>		
 		<sfdc.connector.version>9.0.0</sfdc.connector.version>
-		<munit.version>2.0.0</munit.version>
+		<munit.version>2.1.0</munit.version>
 	</properties>
 
     <build>
