@@ -37,7 +37,7 @@ output application/java
 sizeOf(payload.html.body.form.select.div)]]></ee:set-payload>
 				</ee:message>
 			</ee:transform>
-			<munit-tools:assert-that doc:name="Assert that" doc:id="6c70ca5a-e3b7-4e62-8f91-371d67055539" expression="#[payload]" is="#[MunitTools::equalTo(347)]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="6c70ca5a-e3b7-4e62-8f91-371d67055539" expression="#[payload]" is="#[MunitTools::equalTo(350)]"/>
 		</munit:validation>
 	</munit:test>
 	<munit:test name="test-suite-salesforceDataRetrievalFlowTest" description="Test" doc:id="639bfbba-77c6-40ad-9fbe-9ee4af0a5639" >
