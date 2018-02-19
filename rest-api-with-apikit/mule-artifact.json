@@ -5,7 +5,7 @@
   ],
   "redeploymentEnabled": true,
   "name": "rest-api-with-apikit",
-  "minMuleVersion": "4.0.0",
+  "minMuleVersion": "4.1.0",
   "requiredProduct": "MULE_EE",
   "classLoaderModelLoaderDescriptor": {
     "id": "mule",
