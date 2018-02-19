@@ -4,7 +4,7 @@
   ],
   "redeploymentEnabled": true,
   "name": "netsuite-data-retrieval",
-  "minMuleVersion": "4.0.0",
+  "minMuleVersion": "4.1.0",
   "requiredProduct": "MULE_EE",
   "classLoaderModelLoaderDescriptor": {
     "id": "mule",

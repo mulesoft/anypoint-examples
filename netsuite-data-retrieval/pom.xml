@@ -13,10 +13,9 @@
 	<name>netsuite-data-retrieval</name>
 
 	<properties>
-		<mule.connectors.version>1.0.0</mule.connectors.version>
 		<mule.apikit.version>1.0.0</mule.apikit.version>
 		<netsuite.connector.version>8.0.0</netsuite.connector.version>
-		<munit.version>2.0.0</munit.version>
+		<munit.version>2.1.0</munit.version>
 	</properties>
 
 	<build>
