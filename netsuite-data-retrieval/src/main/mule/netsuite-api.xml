@@ -8,8 +8,8 @@
 http://www.mulesoft.org/schema/mule/netsuite http://www.mulesoft.org/schema/mule/netsuite/current/mule-netsuite.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<http:listener-config name="netsuite-api-httpListenerConfig">
-		<http:listener-connection host="0.0.0.0"
-			port="8081" />
+		<http:listener-connection host="localhost"
+			port="${http.port}" />
 	</http:listener-config>
 	<netsuite:config name="NetSuite_Config" doc:name="NetSuite Config"
 		doc:id="54c21fad-e7e5-409e-9b4a-848d81dae3f7">
