@@ -43,7 +43,7 @@ Follow the procedure below to create, then run the application in Mule ESB.
 This example application consists of triggerFlow which start the process to inform end user about possibility of loan from different banks:
 1. Calling mocked API (GET/customerprofile endpoint) with required parameters where response provides list of bank for obtaining the load.
 2. Calculating the amount of the payment for providing the load from all banks which are obtained in previous step.
-3. Aggregating the result from all bank to one message for customer.    
+3. Aggregating the result from all banks to one message for customer.    
     
 
 #### Go Further ####
