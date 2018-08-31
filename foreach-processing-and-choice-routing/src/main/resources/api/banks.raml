@@ -1,0 +1,43 @@
+#%RAML 1.0
+title: Customer Profile
+version: v1
+baseUri: http://localhost:8081/api
+
+types:
+  customer: 
+    type: object
+    properties: 
+      name: string
+      ssn: string
+      amount: string
+      term: string
+      banks: array
+      requestedDate: date-only
+    
+    
+/customerprofile:
+  get:  
+    description: "Return a customer profile data"
+    queryParameters:
+      name:
+        type: string
+      ssn: 
+        type: string
+      amount: 
+        type: string
+      term:
+        type: string
+    responses:
+      200:
+        body:
+          application/json:
+            type: customer
+            example: |
+              {
+                  "name": "John FLetcher",
+                  "ssn": "123456789",
+                  "amount": "10000",
+                  "term": "10",
+                  "banks": [1,3],
+                  "requestedDate": "2018-12-12"
+              }
