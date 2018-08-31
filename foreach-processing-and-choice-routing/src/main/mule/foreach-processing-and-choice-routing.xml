@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="7eb0a11b-dc46-4a2c-b655-edcee26d1f6a" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="e0390887-7c90-42eb-a2e7-0217b532e107" basePath="/api">
+		<http:request-connection host="localhost" port="9090" />
+	</http:request-config>
+	<flow name="foreach-processing-and-choice-routingFlow" doc:id="3db112d4-3f0e-4cbe-9954-1afa5b45b380" >
+		<http:listener doc:name="Receive HTTP request" doc:id="650e96a5-38dc-4b28-90fd-b858ba6c25c9" config-ref="HTTP_Listener_config" path="/" />
+		<ee:transform doc:name="Save query params" doc:id="79f25225-f5b9-44ae-bd87-4ffde2adc873" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="inputParams" ><![CDATA[%dw 2.0
+output application/java
+---
+attributes.queryParams]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<choice doc:name="All parameters?" doc:id="9c5a829e-e18f-44a5-a45c-d12407c37c34" >
+			<when expression="(vars.inputParams.name != null and vars.inputParams.ssn != null and vars.inputParams.amount != null and vars.inputParams.term != null)" >
+				<http:request method="GET" doc:name="GET /customerprofile" doc:id="49bea557-30fb-428e-85f1-5b28223540d0" config-ref="HTTP_Request_configuration" path="/customerprofile">
+					<http:query-params ><![CDATA[#[output applicaton/java
+---
+{
+	"name" : vars.inputParams.name,
+	"ssn" : vars.inputParams.ssn,
+	"amount" : vars.inputParams.amount,
+	"term" : vars.inputParams.term
+}]]]></http:query-params>
+				</http:request>
+				<ee:transform doc:name="Transform to Object and Set Variable banks" doc:id="509cac6a-379a-4b01-b775-45ddb11f4348">
+				<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-payload>
+				</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="banks"><![CDATA[%dw 2.0
+output application/java
+---
+[]]]></ee:set-variable>
+					</ee:variables>
+			</ee:transform>
+				<foreach doc:name="For Each customer banks" doc:id="7fafcc91-da2e-4049-a391-6e5824831307" collection="#[payload.banks]">
+			<choice doc:name="Which bank?" doc:id="5ec1275c-f24d-4561-be4d-0e98524f318a">
+				<when expression="#[payload == 1]">
+					<ee:transform doc:name="Bank 1" doc:id="676ada54-597f-4065-9b0a-c4b8a21c4b5e">
+						<ee:message>
+							<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	name: "Bank 1",
+	amount: vars.inputParams.amount as Number,
+	term: vars.inputParams.term as Number,
+	payment: (round(1.17 * (vars.inputParams.amount as Number) / (vars.inputParams.term as Number)*100))/100,
+	currency: "EUR"
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+				</when>
+				<when expression="#[payload == 2]">
+					<ee:transform doc:name="Bank 2" doc:id="d3cedc27-e514-47a3-a2d7-261cae83ff75">
+						<ee:message>
+							<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	name: "Bank 2",
+	amount: vars.inputParams.amount as Number,
+	term: vars.inputParams.term as Number,
+	payment: (round(1.15 * (vars.inputParams.amount as Number) / (vars.inputParams.term as Number)*100))/100,
+	currency: "EUR"
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+				</when>
+				<otherwise>
+					<ee:transform doc:name="Bank 3" doc:id="d1cfb11b-1760-49a1-be49-b0154f223d0b">
+						<ee:message>
+							<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	name: "Bank 3",
+	amount: vars.inputParams.amount as Number,
+	term: vars.inputParams.term as Number,
+	payment: (round(1.12 * (vars.inputParams.amount as Number) / (vars.inputParams.term as Number)*100))/100,
+	currency: "EUR"
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+				</otherwise>
+			</choice>
+			<ee:transform doc:name="Add bankInfo" doc:id="1fe574cd-16a0-40ac-b1d7-58551fb73b5b">
+			<ee:message>
+			</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="banks"><![CDATA[%dw 2.0
+output application/java
+---
+vars.banks + {
+	bankInfo: payload.name ++ ": Payment " ++ payload.payment ++ " " ++ payload.currency ++ " per month"
+}]]></ee:set-variable>
+				</ee:variables>
+		</ee:transform>
+		</foreach>
+				<ee:transform doc:name="Response Message" doc:id="706e0437-4030-46da-9c7a-2b6498d3e487">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output text/plain
+---
+"Bank info for customer " ++ vars.inputParams.name ++ " about loan " ++ vars.inputParams.amount ++ " EUR in term " ++ vars.inputParams.term ++" months: \n" ++ (vars.banks.*bankInfo joinBy("\n")) ]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Set error message" doc:id="80130ccb-5f02-4667-9751-2e81e2d33de7" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output text/plain
+---
+"Error: incomplete request"
+]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+					</ee:variables>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</flow>
+</mule>
