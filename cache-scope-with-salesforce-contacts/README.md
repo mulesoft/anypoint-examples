@@ -10,7 +10,7 @@ The very basic concept of caching consists of temporary storing a result of some
 
 This document describes the details of the example within Anypoint Studio. Where appropriate, the XML configuration is provided.
 
-This document assumes that you are familiar with Mule runtime and the [About Anypoint Studio](https://docs.mulesoft.com/anypoint-studio/v/7.2/). Further, this example assumes that you have a basic understanding of [Flow and Subflow Components
+This document assumes that you are familiar with Mule runtime and [About Anypoint Studio](https://docs.mulesoft.com/anypoint-studio/v/7.2/). Further, this example assumes that you have a basic understanding of [Flow and Subflow Components
 ](https://docs.mulesoft.com/mule4-user-guide/v/4.1/flow-component) and [Global Elements](https://docs.mulesoft.com/mule4-user-guide/v/4.1/global-elements).
 
 ### Example Use Case 
@@ -55,9 +55,9 @@ Studio includes a feature that enables you to easily export all the documentatio
 - The XML configuration which corresponds to each flow in your application
 - The text you entered in the Notes tab of any building block in your flow
 
-Follow [the procedure](http://www.mulesoft.org/documentation/display/current/Importing+and+Exporting+in+Studio#ImportingandExportinginStudio-ExportingStudioDocumentation) to export auto-generated Studio documentation.
+Follow [the procedure](https://docs.mulesoft.com/mule4-user-guide/v/4.1/how-to-export-resources#how-to-export-resource-files) to export auto-generated Studio documentation.
 
 ### See Also
 
-- For more information on the Salesforce Connector, see [Connectors and Modules (for Mule 4)](Connectors and Modules (for Mule 4)).
-- For more information on Batch processing, see [Batch processing](http://www.mulesoft.org/documentation/display/current/Batch+Processing+Reference).
+- For more information on the Salesforce Connector, see [Connectors and Modules for Mule 4](Connectors and Modules (for Mule 4)).
+- For more information on Batch processing, see [Batch processing](https://docs.mulesoft.com/mule4-user-guide/v/4.1/batch-job-concept).
