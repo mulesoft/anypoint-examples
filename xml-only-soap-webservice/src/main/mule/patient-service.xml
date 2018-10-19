@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit-soap="http://www.mulesoft.org/schema/mule/apikit-soap" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/apikit-soap http://www.mulesoft.org/schema/mule/apikit-soap/current/mule-apikit-soap.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+    <flow name="patient-service-main">
+        <http:listener config-ref="HTTP_Listener_config" path="/PatientService/PatientPort">
+            <http:response>
+                <http:body>#[payload]</http:body>
+                <http:headers>#[attributes.protocolHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response>
+                <http:body>#[payload]</http:body>
+                <http:headers>#[attributes.protocolHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit-soap:router config-ref="PatientService_SOAP_Configuration">
+            <apikit-soap:attributes><![CDATA[#[
+              %dw 2.0
+              output application/java
+              ---
+              {
+                  headers: attributes.headers,
+                  method: attributes.method,
+                  queryString: attributes.queryString
+            }]]]></apikit-soap:attributes>
+        </apikit-soap:router>
+    </flow>
+    <flow name="upsertPatient:\PatientService_SOAP_Configuration">
+        <ee:transform doc:id="d2bccebb-9f54-41f6-80d8-cb551c622041" doc:name="set upsertPatientResponse">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+ns ns0 http://www.mule-health.com/SOA/message/1.0
+ns ns1 http://www.mule-health.com/SOA/model/1.0
+output application/xml
+---
+ns0#"upsertPatientResponse": {
+	ns1#"PatientId": now() as String
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="getPatient:\PatientService_SOAP_Configuration">
+		<ee:transform doc:id="120eacff-a20e-4cd3-9a9e-090f9b67bb3e" doc:name="set getPatientResponse">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+ns ns0 http://www.mule-health.com/SOA/message/1.0
+ns ns1 http://www.mule-health.com/SOA/model/1.0
+output application/xml
+---
+ns0#"getPatientResponse": {
+	ns1#"Patient": {
+		patientId: now() as String,
+		dateOfBirth: |1930-01-01|,
+		gender: "Male",
+		nationality: "USA",
+		address1: "DisneyLand",
+		lastName: "Duck",
+		firstName: "Donald",
+		nationalId: now() as String
+	}
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+</mule>

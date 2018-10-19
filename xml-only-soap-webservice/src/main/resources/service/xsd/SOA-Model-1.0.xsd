@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    MuleSoft Examples
+    Copyright 2014 MuleSoft, Inc.
+
+    This product includes software developed at
+    MuleSoft, Inc. (http://www.mulesoft.com/).
+
+-->
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.mule-health.com/SOA/model/1.0" xmlns:tns="http://www.mule-health.com/SOA/model/1.0" elementFormDefault="unqualified">
+
+	<element name="Referer" type="tns:refererType" />
+	<element name="Referral" type="tns:referralType" />
+	<element name="Subject" type="tns:demographicType" />
+	<element name="Patient" type="tns:patientType" />
+	<element name="PatientId" type="tns:patientIdType" />
+	<element name="Episode" type="tns:episodeType" />
+	<element name="Bill" type="tns:billType" />
+
+	<complexType name="refererType">
+		<sequence>
+			<element name="clientId" type="string" />
+		</sequence>
+	</complexType>
+
+	<complexType name="referralType">
+		<sequence>
+			<sequence>
+				<element name="procedure" type="tns:procedureType" />
+			</sequence>
+		</sequence>
+	</complexType>
+
+	<complexType name="demographicType">
+		<sequence minOccurs="0">
+			<element name="nationalId" type="string" />
+			<element name="firstName" type="string" />
+			<element name="lastName" type="string" />
+			<element name="address1" type="string" />
+			<element name="address2" type="string" />
+			<element name="address3" type="string" />
+			<element name="nationality" type="string" />
+			<element name="gender" type="tns:genderType" />
+			<element name="dateOfBirth" type="date" />
+		</sequence>
+	</complexType>
+
+	<complexType name="patientType">
+		<complexContent>
+			<extension base="tns:demographicType">
+				<sequence>
+					<element name="patientId" type="tns:patientIdType" />
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<simpleType name="patientIdType">
+		<restriction base="string">
+			<pattern value="\w+" />
+		</restriction>
+	</simpleType>
+
+	<complexType name="episodeType">
+		<sequence>
+			<element name="episodeId" type="string" />
+			<element ref="tns:PatientId" />
+			<element name="admission" type="tns:admissionType" />
+			<element name="startDate" type="date" />
+			<element name="endDate" type="date" />
+			<element name="care" type="tns:careType" />
+
+		</sequence>
+	</complexType>
+
+	<complexType name="billType">
+		<sequence>
+			<element name="costPerNight" type="string" />
+			<element name="initialStayEstimate" type="string" />
+			<element name="runningTotal" type="string" />
+			<element name="status">
+				<simpleType>
+					<restriction base="string">
+						<enumeration value="Pending" />
+						<enumeration value="Complete" />
+					</restriction>
+				</simpleType>
+			</element>
+		</sequence>
+	</complexType>
+
+	<simpleType name="admissionType">
+		<restriction base="string">
+			<enumeration value="Elective" />
+			<enumeration value="Emergency" />
+		</restriction>
+	</simpleType>
+
+	<simpleType name="careType">
+		<restriction base="string">
+			<enumeration value="Private" />
+			<enumeration value="Public" />
+		</restriction>
+	</simpleType>
+
+	<complexType name="procedureType">
+		<sequence>
+			<element name="code" type="tns:procedureCodeType" />
+			<element name="admission" type="tns:admissionType" />
+			<element name="department" type="string" />
+		</sequence>
+	</complexType>
+	<simpleType name="genderType">
+		<restriction base="string">
+			<enumeration value="Male" />
+			<enumeration value="Female" />
+		</restriction>
+	</simpleType>
+	<simpleType name="procedureCodeType">
+		<restriction base="string">
+			<enumeration value="In-patient" />
+			<enumeration value="Day-patient" />
+			<enumeration value="Out-patient" />
+		</restriction>
+	</simpleType>
+
+</schema>

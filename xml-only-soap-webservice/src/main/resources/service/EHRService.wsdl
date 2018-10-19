@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:mes="http://www.mule-health.com/SOA/message/1.0" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="EHR" targetNamespace="http://www.mule-health.com/SOA/service/ehr/1.0" xmlns:tns="http://www.mule-health.com/SOA/service/ehr/1.0">
+	<wsdl:types>
+		<xsd:schema>
+			<xsd:import namespace="http://www.mule-health.com/SOA/message/1.0" schemaLocation="xsd/SOA-Message-1.0.xsd" />
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="createEpisode">
+		<wsdl:part element="mes:createEpisode" name="parameters" />
+	</wsdl:message>
+	<wsdl:message name="createEpisodeResponse">
+		<wsdl:part element="mes:createEpisodeResponse" name="parameters" />
+	</wsdl:message>
+	<wsdl:message name="findEpisodes">
+		<wsdl:part element="mes:findEpisodes" name="parameters" />
+	</wsdl:message>
+	<wsdl:message name="findEpisodesResponse">
+		<wsdl:part element="mes:findEpisodesResponse" name="parameters" />
+	</wsdl:message>
+	<wsdl:portType name="EHR">
+		<wsdl:operation name="createEpisode">
+			<wsdl:input message="tns:createEpisode" />
+			<wsdl:output message="tns:createEpisodeResponse" />
+		</wsdl:operation>
+		<wsdl:operation name="findEpisodes">
+			<wsdl:input message="tns:findEpisodes" />
+			<wsdl:output message="tns:findEpisodesResponse" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="EHRSoap" type="tns:EHR">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="createEpisode">
+			<soap:operation soapAction="http://http://www.mule-health.com/SOA/service/ehr/1.0/createEpisode" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="findEpisodes">
+			<soap:operation soapAction="http://http://www.mule-health.com/SOA/service/ehr/1.0/findEpisodes" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="EHRService">
+		<wsdl:port binding="tns:EHRSoap" name="EHRPort">
+			<soap:address location="http://www.mule-health.com" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

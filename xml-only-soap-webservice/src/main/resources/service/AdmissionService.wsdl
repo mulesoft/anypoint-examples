@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:mes="http://www.mule-health.com/SOA/message/1.0" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Admission" targetNamespace="http://www.mule-health.com/SOA/service/admission/1.0" xmlns:tns="http://www.mule-health.com/SOA/service/admission/1.0">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://www.mule-health.com/SOA/service/admission/1.0">
+      <xsd:import namespace="http://www.mule-health.com/SOA/message/1.0" schemaLocation="xsd/SOA-Message-1.0.xsd" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="admitSubject">
+    <wsdl:part element="mes:admitSubject" name="parameters" />
+  </wsdl:message>
+  <wsdl:message name="admitSubjectResponse">
+    <wsdl:part element="mes:admitSubjectResponse" name="parameters" />
+  </wsdl:message>
+  <wsdl:portType name="Admission">
+    <wsdl:operation name="admitSubject">
+      <wsdl:input message="tns:admitSubject" />
+      <wsdl:output message="tns:admitSubjectResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AdmissionSoap" type="tns:Admission">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="admitSubject">
+      <soap:operation soapAction="http://http://www.mule-health.com/SOA/service/admission/1.0/admitSubject" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AdmissionService">
+    <wsdl:port binding="tns:AdmissionSoap" name="AdmissionPort">
+      <soap:address location="http://www.mule-health.com" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

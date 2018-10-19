@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit-soap="http://www.mulesoft.org/schema/mule/apikit-soap" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/apikit-soap http://www.mulesoft.org/schema/mule/apikit-soap/current/mule-apikit-soap.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+    <flow name="ehr-service-main">
+        <http:listener config-ref="HTTP_Listener_config" path="/EHRService/EHRPort">
+            <http:response>
+                <http:body>#[payload]</http:body>
+                <http:headers>#[attributes.protocolHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response>
+                <http:body>#[payload]</http:body>
+                <http:headers>#[attributes.protocolHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit-soap:router config-ref="EHRService_SOAP_Configuration">
+            <apikit-soap:attributes><![CDATA[#[
+              %dw 2.0
+              output application/java
+              ---
+              {
+                  headers: attributes.headers,
+                  method: attributes.method,
+                  queryString: attributes.queryString
+            }]]]></apikit-soap:attributes>
+        </apikit-soap:router>
+    </flow>
+    <flow name="createEpisode:\EHRService_SOAP_Configuration">
+        <ee:transform doc:name="set createEpisodeResponse" doc:id="974f99ec-92fd-45cf-bbe6-af28d15f551d">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+ns ns0 http://www.mule-health.com/SOA/message/1.0
+ns ns1 http://www.mule-health.com/SOA/model/1.0
+output application/xml
+---
+ns0#"createEpisodeResponse": {
+	ns1#"Episode": {
+		episodeId: now() as String,
+		ns1#PatientId: payload.body.getPatientResponse.Patient.patientId,
+		admission: "Elective",
+		startDate: now(),
+		endDate: now(),
+		care: "Private"
+	}
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="findEpisodes:\EHRService_SOAP_Configuration">
+        <logger level="INFO" doc:name="Logger" doc:id="61dc4ef6-42d9-42f0-ba97-f6892ecfe285" message="findEpisodes:  #[output application/json --- payload]"/>
+		<ee:transform doc:id="689374d1-9582-40e0-8eed-a470658e4dad" doc:name="set findEpisodeResponse">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+ns ns0 http://www.mule-health.com/SOA/message/1.0
+ns ns1 http://www.mule-health.com/SOA/model/1.0
+output application/xml
+---
+ns0#"findEpisodesResponse": {
+	ns1#"Episode": {
+		ns1#PatientId: payload.body.getPatientResponse.Patient.patientId
+	}
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+</mule>

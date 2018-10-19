@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:apikit-soap="http://www.mulesoft.org/schema/mule/apikit-soap"
+    xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/apikit-soap http://www.mulesoft.org/schema/mule/apikit-soap/current/mule-apikit-soap.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+
+    <http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="5c3626d3-cfca-49f9-b10b-1b6ec0c3e10e">
+        <http:listener-connection host="localhost" port="${http.port}" />
+    </http:listener-config>
+    <http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="5b6d8b70-14a5-434c-9551-abca0dcf9b05">
+        <http:request-connection host="localhost" port="${http.port}" connectionIdleTimeout="600000000" usePersistentConnections="false"/>
+    </http:request-config>
+
+    <configuration-properties doc:name="Configuration properties" doc:id="bdc2e07c-2f4e-43f9-8b56-d87f3c556855"
+        file="mule.artifacts.properties" />
+
+    <apikit-soap:config name="AdmissionService_SOAP_Configuration" service="AdmissionService" port="AdmissionPort"
+        doc:name="APIKit for SOAP Configuration" doc:id="e2a7fded-dacd-430e-93f8-d2710fa5e692" wsdlLocation="service/AdmissionService.wsdl" />
+
+    <apikit-soap:config name="EHRService_SOAP_Configuration" service="EHRService" port="EHRPort"
+        doc:name="EHRService SOAP Configuration" doc:id="e739b69e-0c59-4b30-bc67-c3381a947412" wsdlLocation="service/EHRService.wsdl" />
+
+    <apikit-soap:config name="PatientService_SOAP_Configuration" service="PatientService" port="PatientPort"
+        doc:name="PatientService SOAP Configuration" doc:id="0314dd45-7d3c-454b-bc12-9dc70c61aec5" wsdlLocation="service/PatientService.wsdl" />
+
+    <flow name="admission-service-main" doc:id="c5905dae-56b3-4717-975b-82e88af9fc41">
+        <http:listener doc:name="Listener" doc:id="b2dd6105-e886-4a24-a150-145c1851d1de" config-ref="HTTP_Listener_config"
+            path="/AdmissionService/AdmissionPort" />
+        <apikit-soap:router doc:name="SOAP Router" doc:id="322355c7-986f-47e0-b003-654f58134a43" config-ref="AdmissionService_SOAP_Configuration">
+			<apikit-soap:attributes ><![CDATA[#[
+              %dw 2.0
+              output application/java
+              ---
+              {
+                  headers: attributes.headers,
+                  method: attributes.method,
+                  queryString: attributes.queryString
+            }]]]></apikit-soap:attributes>
+        </apikit-soap:router>
+	</flow>
+	<flow name="admitSubject:\AdmissionService_SOAP_Configuration" doc:id="c443223a-3fd0-4ebd-acc8-737dbabd6ba0" >
+		<ee:transform doc:name="set Patient Service query" doc:id="e62e8ba3-1903-4959-b652-49eb4e69d3a9">
+			<ee:message>
+				<ee:set-payload ><![CDATA[%dw 2.0
+ns soapenv http://schemas.xmlsoap.org/soap/envelope/
+ns ns0 http://www.mule-health.com/SOA/message/1.0
+ns ns1 http://www.mule-health.com/SOA/model/1.0
+output application/xml
+---
+soapenv#"Envelope": {
+	soapenv#"Header": {},
+	soapenv#"Body": {
+		ns0#"upsertPatient": {
+			ns1#"Subject": payload.body.admitSubject.Subject
+		}
+	}
+}]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+			</ee:variables>
+		</ee:transform>
+		<http:request method="POST" doc:name="Invoke Patient Service" doc:id="6abf61b0-8e9a-4600-a6a5-6ef00cc080ba" config-ref="HTTP_Request_configuration" path="/PatientService/PatientPort" />
+		<ee:transform doc:name="set EHR Service query" doc:id="8ee15bee-b988-4568-98a2-25614563c586" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+ns soapenv http://schemas.xmlsoap.org/soap/envelope/
+ns ns0 http://www.mule-health.com/SOA/message/1.0
+ns ns1 http://www.mule-health.com/SOA/model/1.0
+output application/xml
+---
+soapenv#"Envelope": {
+	soapenv#"Header": {},
+	soapenv#"Body": {
+		ns0#"createEpisode": {
+			ns1#"PatientId": 
+			if(payload.Envelope.Body.upsertPatientResponse != null)
+				payload.Envelope.Body.upsertPatientResponse.PatientId
+			else 
+				payload.Envelope.Body.getPatientResponse.Patient.PatientId
+		}
+	}
+}]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="patientId" ><![CDATA[%dw 2.0
+output application/java
+---
+if(payload.Envelope.Body.upsertPatientResponse != null)
+	payload.Envelope.Body.upsertPatientResponse.PatientId
+else 
+	payload.Envelope.Body.getPatientResponse.Patient.PatientId]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<http:request method="POST" doc:name="Invoke EHR Service" doc:id="e9f17a40-f852-47b3-a3b3-c01abe0b9aec" config-ref="HTTP_Request_configuration" path="/EHRService/EHRPort" />
+		<ee:transform doc:name="set response" doc:id="b809f814-e960-4031-a7c5-623f995e0dfc">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+ns ns0 http://www.mule-health.com/SOA/message/1.0
+ns ns1 http://www.mule-health.com/SOA/model/1.0
+output application/xml
+---
+ns0#"admitSubjectResponse": {
+	ns1#"Episode": {
+		episodeId: payload.Envelope.Body.createEpisodeResponse.Episode.episodeId,
+	    ns1#PatientId: vars.patientId,
+		admission: payload.Envelope.Body.createEpisodeResponse.Episode.admission,
+		(startDate: payload.Envelope.Body.createEpisodeResponse.Episode.startDate as Date),
+		(endDate: (payload.Envelope.Body.createEpisodeResponse.Episode.endDate as Date) +|P5D|),
+		care: payload.Envelope.Body.createEpisodeResponse.Episode.care
+	},
+	ns1#"Bill ": {
+		costPerNight: "100",
+		initialStateEstimate: "5",
+		runningTotal: "500",
+		status: "ADMITTED"
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Log Response" doc:id="04cc7f8a-cd5c-4eab-b9eb-64dbc69efdbb" message="AFTER EHR SERVICE: #[output application/json --- payload]" />
+	</flow>
+</mule>
