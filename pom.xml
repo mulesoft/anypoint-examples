@@ -4,7 +4,7 @@
     <groupId>org.mule.examples</groupId>
     <name>examples-catalog</name>
     <artifactId>examples-catalog</artifactId>
-    <version>2.1.5-SNAPSHOT</version>
+    <version>2.3.0</version>
     <packaging>pom</packaging>
     <modules>
         <module>adding-a-new-customer-to-workday-revenue-management</module>
