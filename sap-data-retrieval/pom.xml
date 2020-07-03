@@ -51,7 +51,7 @@
             <classifier>mule-plugin</classifier>
         </dependency>
         <dependency>
-            <groupId>org.mule.connectors</groupId>
+            <groupId>com.mulesoft.connectors</groupId>
             <artifactId>mule-sap-connector</artifactId>
             <version>${sap.connector.version}</version>
             <classifier>mule-plugin</classifier>
