@@ -168,6 +168,12 @@
            <layout>default</layout>
         </repository>
         <repository>
+           <id>mulesoft-ee-releases</id>
+           <name>MuleSoft Releases Repository</name>
+           <url>https://repository-master.mulesoft.org/nexus/</url>
+           <layout>default</layout>
+        </repository>
+        <repository>
            <id>mulesoft-snapshots</id>
            <name>MuleSoft Snapshots Repository</name>
            <url>https://repository.mulesoft.org/snapshots/</url>
